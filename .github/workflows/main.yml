@@ -10,7 +10,6 @@ jobs:
       - name: Install modules
         run: yarn
       - uses: actions/checkout@v1
-      - uses: stefanoeb/eslint-action@1.0.2
         with:
           files: src/
 
