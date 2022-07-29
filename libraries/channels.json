@@ -1,0 +1,32 @@
+{
+  "channels": [
+    {
+      "id": "1001968761823318066",
+      "name": "Local Testing"
+    },
+    {
+      "id": "1001968157956788325",
+      "name": "Github Libraries"
+    },
+    {
+      "id": "1001968096615071845",
+      "name": "Android Libraries"
+    },
+    {
+      "id": "1001967946559672330",
+      "name": "Backend Libraries"
+    },
+    {
+      "id": "1001967842163433592",
+      "name": "Info"
+    },
+    {
+      "id": "1001967745665093692",
+      "name": "Github"
+    },
+    {
+      "id": "1001967012160995370",
+      "name": "General"
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import { Client, Message } from 'discord.js';
+import { EventCommand } from '../messages/EventCommand';
 
 export interface ConfigurationServiceImplementation {
   getSlackApplicationToken(): string;
@@ -9,7 +10,17 @@ export interface ConfigurationServiceImplementation {
 
   getDiscordClient(): Client;
 
-  executeDiscordClientListeners();
+  executeClientsListeners();
 
-  generateJsonTemplates(isForceGenerate: boolean);
+  getChannelsInformation();
+
+  getChannelNameById(id: string): string;
+
+  executeDiscordListener();
+
+  onEventExecute(event: EventCommand, message: Message);
+
+  executeSlackListener();
+
+  generateJsonTemplates();
 }

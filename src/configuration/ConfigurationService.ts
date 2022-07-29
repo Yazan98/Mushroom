@@ -1,8 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigurationServiceImplementation } from './ConfigurationServiceImplementation';
-import { Client } from 'discord.js';
-import fs from 'fs';
+import {
+  Client,
+  IntentsBitField,
+  Message,
+  GatewayIntentBits,
+} from 'discord.js';
 import { ApplicationUtils } from '../utils/ApplicationUtils';
+import { ChannelModel } from '../messages/ChannelModel';
+import { ConfigurationEventsManager } from './ConfigurationEventsManager';
+import { EventCommand, EventCommandType } from '../messages/EventCommand';
 
 @Injectable()
 export class ConfigurationService
@@ -11,51 +18,161 @@ export class ConfigurationService
   public static ANDROID_JSON_FILE = process.cwd() + '/libraries/android.json';
   public static BACKEND_JSON_FILE = process.cwd() + '/libraries/backend.json';
   public static GENERAL_JSON_FILE = process.cwd() + '/libraries/general.json';
+  public static CHANNELS_JSON_FILE = process.cwd() + '/libraries/channels.json';
+
+  private eventsManager: ConfigurationEventsManager =
+    new ConfigurationEventsManager(this);
+  private discordClient: Client = null;
+  private channels: Array<ChannelModel> = null;
+
+  constructor() {
+    this.executeClientsListeners();
+  }
 
   getCurrentSupportedServices(): Array<string> {
-    return undefined;
+    const supportedPlatforms = process.env.SUPPORTED_SERVICES;
+    if (!supportedPlatforms) {
+      return [];
+    }
+
+    if (!supportedPlatforms.includes(',')) {
+      return [supportedPlatforms];
+    }
+
+    const resultPlatforms = [];
+    const platforms = supportedPlatforms.split(',');
+    for (let i = 0; i < platforms.length; i++) {
+      resultPlatforms.push(platforms[i]);
+    }
+    return resultPlatforms;
   }
 
   getDiscordApplicationToken(): string {
-    return '';
+    return process.env.DISCORD_BOT_TOKEN;
   }
 
   getSlackApplicationToken(): string {
-    return '';
+    return process.env.SLACK_APPLICATION_TOKEN;
   }
 
   getDiscordClient(): Client {
-    return null;
+    return this.discordClient;
   }
 
-  executeDiscordClientListeners() {
-    console.log('asfjaklnwed');
+  executeClientsListeners() {
+    const supportedServices = this.getCurrentSupportedServices();
+    for (let i = 0; i < supportedServices.length; i++) {
+      if (supportedServices[i] === 'slack') {
+        this.executeSlackListener();
+      } else {
+        this.executeDiscordListener();
+      }
+    }
   }
 
-  generateJsonTemplates(isForceGenerate: boolean) {
+  executeDiscordListener() {
+    this.discordClient = new Client({
+      intents: [
+        IntentsBitField.Flags.GuildMessages,
+        IntentsBitField.Flags.MessageContent,
+        IntentsBitField.Flags.Guilds,
+      ],
+    });
+
+    this.discordClient.on('messageCreate', (message: Message) => {
+      if (message.author.bot) {
+        console.log('Ignoring bot message!');
+        return;
+      }
+
+      if (this.channels == null) {
+        this.getChannelsInformation();
+      }
+
+      this.eventsManager.onEventTriggered(
+        message.content,
+        message.channelId,
+        message,
+      );
+    });
+
+    this.discordClient
+      .login(this.getDiscordApplicationToken())
+      .then(() => console.log('Login Log'))
+      .catch((ex) => console.error(ex));
+  }
+
+  getChannelsInformation() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const fs = require('fs');
+    const channelsJsonFile = fs.readFileSync(
+      ConfigurationService.CHANNELS_JSON_FILE,
+    );
+
+    const channelsInfo = JSON.parse(channelsJsonFile).channels;
+    this.channels = [];
+    for (let i = 0; i < channelsInfo.length; i++) {
+      this.channels.push(
+        new ChannelModel(channelsInfo[i].id, channelsInfo[i].name),
+      );
+    }
+
+    console.log('Channels : ' + this.channels);
+  }
+
+  getChannelNameById(id: string): string {
+    if (this.channels == null) return '';
+    let channelName = '';
+    for (let i = 0; i < this.channels.length; i++) {
+      if (id === this.channels[i].id) {
+        channelName = this.channels[i].name;
+      }
+    }
+
+    return channelName;
+  }
+
+  onEventExecute(event: EventCommand, message: Message) {
+    if (event.type == EventCommandType.GET_REPOS) {
+      message.reply('Get Repos : ' + event.target);
+    }
+
+    if (event.type == EventCommandType.GET_ACCOUNT_INFO) {
+      message.reply('Get Account Info : ' + event.target);
+    }
+
+    if (event.type == EventCommandType.GET_REPO_INFO) {
+      message.reply('Get Repo : ' + event.target);
+    }
+  }
+
+  executeSlackListener() {
+    // Add Slack Instance Here
+  }
+
+  generateJsonTemplates() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const fs = require('fs');
     if (fs.existsSync(ConfigurationService.ANDROID_JSON_FILE)) {
       ApplicationUtils.printAppLog(
         `${ConfigurationService.ANDROID_JSON_FILE} Already Exists ..`,
       );
-    } else if (isForceGenerate) {
-      fs.watchFile(ConfigurationService.ANDROID_JSON_FILE, () => {});
     }
 
     if (fs.existsSync(ConfigurationService.BACKEND_JSON_FILE)) {
       ApplicationUtils.printAppLog(
         `${ConfigurationService.BACKEND_JSON_FILE} Already Exists ..`,
       );
-    } else if (isForceGenerate) {
-      fs.watchFile(ConfigurationService.BACKEND_JSON_FILE, () => {});
     }
 
     if (fs.existsSync(ConfigurationService.GENERAL_JSON_FILE)) {
       ApplicationUtils.printAppLog(
         `${ConfigurationService.GENERAL_JSON_FILE} Already Exists ..`,
       );
-    } else if (isForceGenerate) {
-      fs.watchFile(ConfigurationService.GENERAL_JSON_FILE, () => {});
     }
+  }
+
+  getChannels(): Array<ChannelModel> {
+    return this.channels;
   }
 }
