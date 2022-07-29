@@ -133,7 +133,7 @@ export class ConfigurationService
 
   onEventExecute(event: EventCommand, message: Message) {
     if (event.type == EventCommandType.GET_REPOS) {
-      new GithubAccountRepositoriesManager().onImplementAction(
+      new GithubAccountRepositoriesManager(this.httpService).onImplementAction(
         event.target,
         message,
       );
