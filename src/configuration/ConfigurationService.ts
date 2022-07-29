@@ -147,7 +147,10 @@ export class ConfigurationService
     }
 
     if (event.type == EventCommandType.GET_REPO_INFO) {
-      new GithubRepositoryManager().onImplementAction(event.target, message);
+      new GithubRepositoryManager(this.httpService).onImplementAction(
+        event.target,
+        message,
+      );
     }
 
     if (event.type == EventCommandType.GET_BACKEND_LIBRARIES) {

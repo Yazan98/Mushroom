@@ -31,7 +31,7 @@ export class GithubAccountRepositoriesManager extends GithubManager {
       });
   }
 
-  private static getMessageBody(repository: GithubRepository): string {
+  public static getMessageBody(repository: GithubRepository): string {
     let response = '';
     if (repository.name) {
       response +=
