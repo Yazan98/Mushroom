@@ -1746,7 +1746,7 @@
 "builtin-modules@^1.0.0":
   "version" "1.1.1"
 
-"busboy@^1.0.0":
+"busboy@^1.0.0", "busboy@^1.6.0":
   "integrity" "sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA=="
   "resolved" "https://registry.npmjs.org/busboy/-/busboy-1.6.0.tgz"
   "version" "1.6.0"
