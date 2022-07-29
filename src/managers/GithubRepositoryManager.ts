@@ -1,10 +1,10 @@
-import { GithubManager } from './GithubManager';
+import { DependencyManager } from './DependencyManager';
 import { Message } from 'discord.js';
 import { HttpService } from '@nestjs/axios';
-import { GithubRepository } from './GithubRepository';
+import { GithubRepository } from '../models/GithubRepository';
 import { GithubAccountRepositoriesManager } from './GithubAccountRepositoriesManager';
 
-export class GithubRepositoryManager extends GithubManager {
+export class GithubRepositoryManager extends DependencyManager {
   constructor(private readonly httpService: HttpService) {
     super();
   }

@@ -5,10 +5,12 @@ import { ApplicationUtils } from '../utils/ApplicationUtils';
 import { ChannelModel } from '../models/ChannelModel';
 import { ConfigurationEventsManager } from './ConfigurationEventsManager';
 import { EventCommand, EventCommandType } from '../models/EventCommand';
-import { GithubAccountRepositoriesManager } from '../github/GithubAccountRepositoriesManager';
-import { GithubAccountManager } from '../github/GithubAccountManager';
-import { GithubRepositoryManager } from '../github/GithubRepositoryManager';
+import { GithubAccountRepositoriesManager } from '../managers/GithubAccountRepositoriesManager';
+import { GithubAccountManager } from '../managers/GithubAccountManager';
+import { GithubRepositoryManager } from '../managers/GithubRepositoryManager';
 import { HttpService } from '@nestjs/axios';
+import { AndroidRepositoryManager } from '../managers/AndroidRepositoryManager';
+import * as fs from 'fs';
 
 @Injectable()
 export class ConfigurationService
@@ -158,11 +160,18 @@ export class ConfigurationService
     }
 
     if (event.type == EventCommandType.GET_ANDROID_LIBRARIES) {
-      message.reply('Get Android Repos : ' + event.target);
+      new AndroidRepositoryManager(this.httpService).onImplementAction(
+        event.target,
+        message,
+      );
     }
 
     if (event.type == EventCommandType.GET_GITHUB_LIBRARIES) {
       message.reply('Get Github Repos : ' + event.target);
+    }
+
+    if (event.type == EventCommandType.UNKNOWN_COMMAND) {
+      message.reply(ApplicationUtils.getHelpCommands());
     }
   }
 
@@ -171,8 +180,6 @@ export class ConfigurationService
   }
 
   generateJsonTemplates() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const fs = require('fs');
     if (fs.existsSync(ConfigurationService.ANDROID_JSON_FILE)) {
       ApplicationUtils.printAppLog(
         `${ConfigurationService.ANDROID_JSON_FILE} Already Exists ..`,

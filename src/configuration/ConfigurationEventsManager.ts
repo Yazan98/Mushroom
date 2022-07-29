@@ -17,18 +17,24 @@ export class ConfigurationEventsManager {
   onEventTriggered(event: string, channelId: string, message: Message) {
     if (event.includes(ConfigurationEventsManager.GET_USER_INFO)) {
       this.onInfoEvent(event, channelId, message);
-    }
-
-    if (event.includes(ConfigurationEventsManager.GET_USER_REPOSITORIES)) {
+    } else if (
+      event.includes(ConfigurationEventsManager.GET_USER_REPOSITORIES)
+    ) {
       this.onInfoEvent(event, channelId, message);
-    }
-
-    if (event.includes(ConfigurationEventsManager.GET_REPO_INFO)) {
+    } else if (event.includes(ConfigurationEventsManager.GET_REPO_INFO)) {
       this.onInfoEvent(event, channelId, message);
-    }
-
-    if (event.includes(ConfigurationEventsManager.RUN_LIBRARIES_VERSIONS)) {
+    } else if (
+      event.includes(ConfigurationEventsManager.RUN_LIBRARIES_VERSIONS)
+    ) {
       this.onRunLibrariesVersion(event, channelId, message);
+    } else {
+      this.service.onEventExecute(
+        {
+          type: EventCommandType.UNKNOWN_COMMAND,
+          target: '',
+        },
+        message,
+      );
     }
   }
 
@@ -65,9 +71,7 @@ export class ConfigurationEventsManager {
         },
         message,
       );
-    }
-
-    if (event.includes(ConfigurationEventsManager.GET_REPO_INFO)) {
+    } else if (event.includes(ConfigurationEventsManager.GET_REPO_INFO)) {
       const command = event.split(ConfigurationEventsManager.GET_REPO_INFO)[1];
       this.service.onEventExecute(
         {
@@ -76,9 +80,9 @@ export class ConfigurationEventsManager {
         },
         message,
       );
-    }
-
-    if (event.includes(ConfigurationEventsManager.GET_USER_REPOSITORIES)) {
+    } else if (
+      event.includes(ConfigurationEventsManager.GET_USER_REPOSITORIES)
+    ) {
       const command = event.split(
         ConfigurationEventsManager.GET_USER_REPOSITORIES,
       )[1];
@@ -86,6 +90,14 @@ export class ConfigurationEventsManager {
         {
           type: EventCommandType.GET_REPOS,
           target: command.trim(),
+        },
+        message,
+      );
+    } else {
+      this.service.onEventExecute(
+        {
+          type: EventCommandType.UNKNOWN_COMMAND,
+          target: '',
         },
         message,
       );
@@ -130,9 +142,7 @@ export class ConfigurationEventsManager {
           },
           message,
         );
-      }
-
-      if (command === 'backend') {
+      } else if (command === 'backend') {
         this.service.onEventExecute(
           {
             type: EventCommandType.GET_BACKEND_LIBRARIES,
@@ -140,13 +150,19 @@ export class ConfigurationEventsManager {
           },
           message,
         );
-      }
-
-      if (command === 'github') {
+      } else if (command === 'github') {
         this.service.onEventExecute(
           {
             type: EventCommandType.GET_GITHUB_LIBRARIES,
             target: command.trim(),
+          },
+          message,
+        );
+      } else {
+        this.service.onEventExecute(
+          {
+            type: EventCommandType.UNKNOWN_COMMAND,
+            target: '',
           },
           message,
         );
