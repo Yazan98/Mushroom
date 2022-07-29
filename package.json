@@ -25,6 +25,7 @@
     "@discordx/koa": "^1.1.0",
     "@discordx/pagination": "^3.0.0",
     "@koa/router": "^12.0.0",
+    "@nestjs/axios": "^0.1.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",

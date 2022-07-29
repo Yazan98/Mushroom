@@ -5,6 +5,10 @@ import { ApplicationUtils } from '../utils/ApplicationUtils';
 import { ChannelModel } from '../models/ChannelModel';
 import { ConfigurationEventsManager } from './ConfigurationEventsManager';
 import { EventCommand, EventCommandType } from '../models/EventCommand';
+import { GithubAccountRepositoriesManager } from '../github/GithubAccountRepositoriesManager';
+import { GithubAccountManager } from '../github/GithubAccountManager';
+import { GithubRepositoryManager } from '../github/GithubRepositoryManager';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class ConfigurationService
@@ -20,7 +24,7 @@ export class ConfigurationService
   private discordClient: Client = null;
   private channels: Array<ChannelModel> = null;
 
-  constructor() {
+  constructor(private readonly httpService: HttpService) {
     this.executeClientsListeners();
   }
 
@@ -129,15 +133,21 @@ export class ConfigurationService
 
   onEventExecute(event: EventCommand, message: Message) {
     if (event.type == EventCommandType.GET_REPOS) {
-      message.reply('Get Repos : ' + event.target);
+      new GithubAccountRepositoriesManager().onImplementAction(
+        event.target,
+        message,
+      );
     }
 
     if (event.type == EventCommandType.GET_ACCOUNT_INFO) {
-      message.reply('Get Account Info : ' + event.target);
+      new GithubAccountManager(this.httpService).onImplementAction(
+        event.target,
+        message,
+      );
     }
 
     if (event.type == EventCommandType.GET_REPO_INFO) {
-      message.reply('Get Repo : ' + event.target);
+      new GithubRepositoryManager().onImplementAction(event.target, message);
     }
 
     if (event.type == EventCommandType.GET_BACKEND_LIBRARIES) {
