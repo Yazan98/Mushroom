@@ -1,5 +1,5 @@
 import { Client, Message } from 'discord.js';
-import { EventCommand } from '../messages/EventCommand';
+import { EventCommand } from '../models/EventCommand';
 
 export interface ConfigurationServiceImplementation {
   getSlackApplicationToken(): string;

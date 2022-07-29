@@ -1,15 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigurationServiceImplementation } from './ConfigurationServiceImplementation';
-import {
-  Client,
-  IntentsBitField,
-  Message,
-  GatewayIntentBits,
-} from 'discord.js';
+import { Client, IntentsBitField, Message } from 'discord.js';
 import { ApplicationUtils } from '../utils/ApplicationUtils';
-import { ChannelModel } from '../messages/ChannelModel';
+import { ChannelModel } from '../models/ChannelModel';
 import { ConfigurationEventsManager } from './ConfigurationEventsManager';
-import { EventCommand, EventCommandType } from '../messages/EventCommand';
+import { EventCommand, EventCommandType } from '../models/EventCommand';
 
 @Injectable()
 export class ConfigurationService
@@ -143,6 +138,18 @@ export class ConfigurationService
 
     if (event.type == EventCommandType.GET_REPO_INFO) {
       message.reply('Get Repo : ' + event.target);
+    }
+
+    if (event.type == EventCommandType.GET_BACKEND_LIBRARIES) {
+      message.reply('Get Backend Repos : ' + event.target);
+    }
+
+    if (event.type == EventCommandType.GET_ANDROID_LIBRARIES) {
+      message.reply('Get Android Repos : ' + event.target);
+    }
+
+    if (event.type == EventCommandType.GET_GITHUB_LIBRARIES) {
+      message.reply('Get Github Repos : ' + event.target);
     }
   }
 
