@@ -7,6 +7,9 @@ WORKDIR /tmp/app
 # Move package.json
 COPY package.json .
 
+COPY tsconfig.build.json .
+COPY tsconfig.json .
+
 # Install dependencies
 RUN npm install
 
