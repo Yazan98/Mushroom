@@ -6,6 +6,7 @@ WORKDIR /tmp/app
 
 # Move package.json
 COPY package.json .
+COPY .env .
 
 COPY tsconfig.build.json .
 COPY tsconfig.json .
