@@ -33,4 +33,4 @@ COPY --from=build-runner /tmp/app/package.json /app/package.json
 RUN npm install --only=production
 
 # Start bot
-CMD [ "node", "build/main.js" ]
+CMD [ "npm", "start:prod" ]
