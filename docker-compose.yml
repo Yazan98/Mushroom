@@ -4,4 +4,4 @@ services:
     build: mushroom
     command: node build/main.js
     environment:
-      - BOT_TOKEN=${BOT_TOKEN}
+      - DISCORD_BOT_TOKEN=${BOT_TOKEN}

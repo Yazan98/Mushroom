@@ -7,6 +7,9 @@ WORKDIR /tmp/app
 # Move package.json
 COPY package.json .
 
+# Move Node Modules to Container
+COPY node_modules .
+
 # Install dependencies
 RUN npm install
 

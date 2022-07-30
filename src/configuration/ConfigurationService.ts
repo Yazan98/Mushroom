@@ -12,6 +12,8 @@ import { HttpService } from '@nestjs/axios';
 import { AndroidRepositoryManager } from '../managers/AndroidRepositoryManager';
 import * as fs from 'fs';
 import { GithubRepositoriesTagsManager } from '../managers/GithubRepositoriesTagsManager';
+import { TextChannel } from 'discord.js';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class ConfigurationService
@@ -86,7 +88,7 @@ export class ConfigurationService
     });
 
     this.discordClient.on('messageCreate', (message: Message) => {
-      if (message.author.bot) {
+      if (message.author.bot && !message.content.includes('get libraries')) {
         console.log('Ignoring bot message!');
         return;
       }
@@ -212,6 +214,22 @@ export class ConfigurationService
         `${ConfigurationService.GENERAL_JSON_FILE} Already Exists ..`,
       );
     }
+  }
+
+  onSendDiscordMessageEventTrigger(message: string) {
+    if (this.discordClient != null) {
+      (
+        this.discordClient.channels.cache.get(
+          '1001968096615071845',
+        ) as TextChannel
+      ).send(message);
+    }
+  }
+
+  @Cron(CronExpression.EVERY_4_HOURS)
+  handleCron() {
+    console.log('Every minute');
+    this.onSendDiscordMessageEventTrigger('get libraries backend');
   }
 
   getChannels(): Array<ChannelModel> {

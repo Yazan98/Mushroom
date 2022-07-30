@@ -7,6 +7,6 @@ import { HttpModule } from '@nestjs/axios/dist/http.module';
   imports: [HttpModule],
   controllers: [ConfigurationController],
   providers: [ConfigurationService],
-  exports: [],
+  exports: [ConfigurationService],
 })
 export class ConfigurationModule {}
