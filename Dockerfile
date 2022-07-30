@@ -32,8 +32,5 @@ COPY --from=build-runner /tmp/app/package.json /app/package.json
 # Install dependencies
 RUN npm install --only=production
 
-# Move build files
-COPY --from=build-runner /tmp/app/build /app/build
-
 # Start bot
 CMD [ "node", "build/main.js" ]
