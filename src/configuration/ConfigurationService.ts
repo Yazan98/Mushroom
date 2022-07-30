@@ -11,6 +11,7 @@ import { GithubRepositoryManager } from '../managers/GithubRepositoryManager';
 import { HttpService } from '@nestjs/axios';
 import { AndroidRepositoryManager } from '../managers/AndroidRepositoryManager';
 import * as fs from 'fs';
+import { GithubRepositoriesTagsManager } from '../managers/GithubRepositoriesTagsManager';
 
 @Injectable()
 export class ConfigurationService
@@ -18,7 +19,11 @@ export class ConfigurationService
 {
   public static ANDROID_JSON_FILE = process.cwd() + '/libraries/android.json';
   public static BACKEND_JSON_FILE = process.cwd() + '/libraries/backend.json';
+  public static BACKEND_CACHE_JSON_FILE =
+    process.cwd() + '/libraries/backend-cache.json';
   public static GENERAL_JSON_FILE = process.cwd() + '/libraries/general.json';
+  public static GENERAL_CACHE_JSON_FILE =
+    process.cwd() + '/libraries/general-cache.json';
   public static CHANNELS_JSON_FILE = process.cwd() + '/libraries/channels.json';
 
   private eventsManager: ConfigurationEventsManager =
@@ -156,7 +161,12 @@ export class ConfigurationService
     }
 
     if (event.type == EventCommandType.GET_BACKEND_LIBRARIES) {
-      message.reply('Get Backend Repos : ' + event.target);
+      new GithubRepositoriesTagsManager(
+        this.httpService,
+        ConfigurationService.BACKEND_JSON_FILE,
+        'Backend',
+        ConfigurationService.BACKEND_CACHE_JSON_FILE,
+      ).onImplementAction('', message);
     }
 
     if (event.type == EventCommandType.GET_ANDROID_LIBRARIES) {
@@ -167,7 +177,12 @@ export class ConfigurationService
     }
 
     if (event.type == EventCommandType.GET_GITHUB_LIBRARIES) {
-      message.reply('Get Github Repos : ' + event.target);
+      new GithubRepositoriesTagsManager(
+        this.httpService,
+        ConfigurationService.GENERAL_JSON_FILE,
+        'General',
+        ConfigurationService.GENERAL_CACHE_JSON_FILE,
+      ).onImplementAction('', message);
     }
 
     if (event.type == EventCommandType.UNKNOWN_COMMAND) {
