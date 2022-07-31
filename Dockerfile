@@ -38,9 +38,6 @@ RUN npm install
 COPY src ./src
 COPY tsconfig.json   .
 
-COPY --from=build-runner /tmp/app/package.json /usr/src/app/package.json
-COPY --from=build-runner /tmp/app/tsconfig.build.json /usr/src/app/tsconfig.build.json
-COPY --from=build-runner /tmp/app/tsconfig.json /usr/src/app/tsconfig.json
 ADD src dist
 ADD dist /usr/src/app/dist
 ADD src /usr/src/app/src
