@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:14-alpine as build-runner
 
 # Set necessary environment variables.
 ENV NODE_ENV=production \
@@ -22,6 +22,28 @@ USER node
 # Set the default working directory for the app
 # It is a best practice to use the /usr/src/app directory
 WORKDIR /usr/src/app
+
+COPY package.json .
+COPY .env .
+
+COPY tsconfig.build.json .
+COPY tsconfig.json .
+
+RUN npm i -g npm
+
+# Install dependencies
+RUN npm install
+
+# Move source files
+COPY src ./src
+COPY tsconfig.json   .
+
+COPY --from=build-runner /tmp/app/package.json /usr/src/app/package.json
+COPY --from=build-runner /tmp/app/tsconfig.build.json /usr/src/app/tsconfig.build.json
+COPY --from=build-runner /tmp/app/tsconfig.json /usr/src/app/tsconfig.json
+ADD src dist
+ADD dist /usr/src/app/dist
+ADD src /usr/src/app/src
 
 # Copy package.json, package-lock.json
 # Copying this separately prevents re-running npm install on every code change.
