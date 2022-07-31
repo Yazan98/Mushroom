@@ -40,6 +40,8 @@ ADD src app/src
 
 # Install dependencies
 RUN npm install
+COPY . .
+EXPOSE 3000
 
 # Start bot
 CMD [ "npm", "start" ]
