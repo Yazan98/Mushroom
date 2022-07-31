@@ -1,28 +1,11 @@
-FROM node:14-alpine as build-runner
+## build runner
+FROM node:lts-alpine3.16 as build-runner
 
-# Set necessary environment variables.
-ENV NODE_ENV=production \
-    NPM_CONFIG_PREFIX=/home/node/.npm-global \
-    PATH=$PATH:/home/node/.npm-global/bin:/home/node/node_modules/.bin:$PATH
-
-# For handling Kernel signals properly
-RUN apk add --no-cache tini
-
-# Create the working directory, including the node_modules folder for the sake of assigning ownership in the next command
-RUN mkdir -p /usr/src/app/node_modules
-
-# Change ownership of the working directory to the node:node user:group
-# This ensures that npm install can be executed successfully with the correct permissions
-RUN chown -R node:node /usr/src/app
-
-# Set the user to use when running this image
-# Non previlage mode for better security (this user comes with official NodeJS image).
-USER node
-
-# Set the default working directory for the app
-# It is a best practice to use the /usr/src/app directory
+# Set temp directory
+WORKDIR /tmp/app
 WORKDIR /usr/src/app
 
+# Move package.json
 COPY package.json .
 COPY .env .
 
@@ -33,37 +16,43 @@ RUN npm i -g npm
 
 # Install dependencies
 RUN npm install
+RUN npm install --only=development
 
 # Move source files
 COPY src ./src
 COPY tsconfig.json   .
+COPY . .
 
+# Build project
+RUN npm run build
+
+## producation runner
+FROM node:lts-alpine as prod-runner
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+# Set work directory
+WORKDIR /app
+WORKDIR /usr/src/app
+COPY package*.json ./
+
+RUN npm install --only=production
+COPY . .
+COPY --from=development /usr/src/app/dist ./dist
+
+# Copy package.json from build-runner
+COPY --from=build-runner /tmp/app/package.json /app/package.json
+COPY --from=build-runner /tmp/app/tsconfig.build.json /app/tsconfig.build.json
+COPY --from=build-runner /tmp/app/tsconfig.json /app/tsconfig.json
 ADD src dist
-ADD dist /usr/src/app/dist
-ADD src /usr/src/app/src
+ADD dist app/dist
+ADD src app/src
 
-# Copy package.json, package-lock.json
-# Copying this separately prevents re-running npm install on every code change.
-COPY --chown=node:node package*.json ./
 
-# Install dependencies.
-RUN npm i -g @nestjs/cli
+# Install dependencies
 RUN npm install
-
-# Necessary to run before adding application code to leverage Docker cache
-RUN npm cache clean --force
-# RUN mv node_modules ../
-
-# Bundle app source
-COPY --chown=node:node . ./
-
-# Display directory structure
-RUN ls -l
-
-# Expose API port
+COPY . .
 EXPOSE 3000
 
-ENTRYPOINT ["/sbin/tini", "--"]
-
-# Run the web service on container startup
-CMD [ "npm", "start" ]
+# Start bot
+CMD ["node", "dist/main"]
