@@ -21,7 +21,6 @@ RUN npm install --only=development
 # Move source files
 COPY src ./src
 COPY tsconfig.json   .
-COPY . .
 
 # Build project
 RUN npm run build
@@ -37,7 +36,6 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install --only=production
-COPY . .
 COPY --from=development /usr/src/app/dist ./dist
 
 # Copy package.json from build-runner
