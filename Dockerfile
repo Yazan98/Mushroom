@@ -29,7 +29,7 @@ COPY --chown=node:node package*.json ./
 
 # Install dependencies.
 # RUN npm i -g @nestjs/cli
-RUN npm ci --only=production
+RUN npm install --only=production
 
 # Necessary to run before adding application code to leverage Docker cache
 RUN npm cache clean --force
