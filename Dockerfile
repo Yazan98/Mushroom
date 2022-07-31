@@ -28,8 +28,8 @@ WORKDIR /usr/src/app
 COPY --chown=node:node package*.json ./
 
 # Install dependencies.
-# RUN npm i -g @nestjs/cli
-RUN npm install --only=production
+RUN npm i -g @nestjs/cli
+RUN npm install
 
 # Necessary to run before adding application code to leverage Docker cache
 RUN npm cache clean --force
