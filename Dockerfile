@@ -29,6 +29,9 @@ WORKDIR /app
 
 # Copy package.json from build-runner
 COPY --from=build-runner /tmp/app/package.json /app/package.json
+COPY --from=build-runner /tmp/app/tsconfig.build.json /app/tsconfig.build.json
+COPY --from=build-runner /tmp/app/tsconfig.json /app/tsconfig.json
+
 
 # Install dependencies
 RUN npm install --only=production
