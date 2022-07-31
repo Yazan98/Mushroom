@@ -39,7 +39,7 @@ ADD src app/src
 
 
 # Install dependencies
-RUN npm install --only=production
+RUN npm install
 
 # Start bot
 CMD [ "npm", "start" ]
