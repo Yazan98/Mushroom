@@ -31,8 +31,10 @@ WORKDIR /app
 COPY --from=build-runner /tmp/app/package.json /app/package.json
 COPY --from=build-runner /tmp/app/tsconfig.build.json /app/tsconfig.build.json
 COPY --from=build-runner /tmp/app/tsconfig.json /app/tsconfig.json
-ADD /tmp/app/dist /app/dist
-ADD src dst
+ADD src dist
+ADD dist app/dist
+ADD src app/src
+
 
 # Install dependencies
 RUN npm install --only=production
