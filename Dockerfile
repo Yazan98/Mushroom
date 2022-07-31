@@ -1,5 +1,5 @@
 ## build runner
-FROM node:lts-alpine as build-runner
+FROM node:lts-alpine3.16 as build-runner
 
 # Set temp directory
 WORKDIR /tmp/app
@@ -10,6 +10,8 @@ COPY .env .
 
 COPY tsconfig.build.json .
 COPY tsconfig.json .
+
+RUN npm i -g npm
 
 # Install dependencies
 RUN npm install
