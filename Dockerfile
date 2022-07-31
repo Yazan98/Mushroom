@@ -42,4 +42,4 @@ RUN npm install
 EXPOSE 3000
 
 # Start bot
-CMD ["node", "dist/main"]
+CMD ["node", "app/dist/main"]
