@@ -6,8 +6,11 @@ export declare class GithubRepositoriesTagsManager extends DependencyManager {
     private readonly fileName;
     private readonly mode;
     private readonly cacheFile;
+    private cachedLibraries;
+    private cacheManager;
     constructor(httpService: HttpService, fileName: string, mode: string, cacheFile: string);
     onImplementAction(event: string, message: Message): void;
     private onRepositoryRequest;
     private onUpdateMessageSend;
+    private getLibraryUpdateMessage;
 }

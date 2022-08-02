@@ -2,9 +2,13 @@ import { DependencyManager } from './DependencyManager';
 import { Message } from 'discord.js';
 import { HttpService } from '@nestjs/axios';
 import { GithubRepositoryTag } from '../models/GithubRepositoryTag';
-import * as fs from 'fs';
+import { LibraryVersionCache } from '../models/LibraryVersionCache';
+import { CacheFileManager } from './CacheFileManager';
 
 export class GithubRepositoriesTagsManager extends DependencyManager {
+  private cachedLibraries: Array<LibraryVersionCache> = null;
+  private cacheManager: CacheFileManager = null;
+
   constructor(
     private readonly httpService: HttpService,
     private readonly fileName: string,
@@ -12,6 +16,8 @@ export class GithubRepositoriesTagsManager extends DependencyManager {
     private readonly cacheFile: string,
   ) {
     super();
+    this.cacheManager = new CacheFileManager(cacheFile);
+    this.cachedLibraries = this.cacheManager.onPrepareCacheFileLibraries();
   }
 
   onImplementAction(event: string, message: Message) {
@@ -48,13 +54,7 @@ export class GithubRepositoriesTagsManager extends DependencyManager {
           );
         } else {
           if (data[0].name !== version) {
-            this.onUpdateMessageSend(
-              message,
-              libraryName,
-              data[0].name,
-              data[0].commit.url,
-              data[0].zipball_url,
-            );
+            this.onUpdateMessageSend(message, libraryName, data[0].name);
           }
         }
       })
@@ -69,18 +69,28 @@ export class GithubRepositoriesTagsManager extends DependencyManager {
       });
   }
 
-  private onUpdateMessageSend(
-    message: Message,
-    name: string,
-    version: string,
-    commit: string,
-    link: string,
-  ) {
+  private onUpdateMessageSend(message: Message, name: string, version: string) {
+    let cachedVersion = '';
+    for (let i = 0; i < this.cachedLibraries.length; i++) {
+      if (this.cachedLibraries[i].name === name) {
+        cachedVersion = this.cachedLibraries[i].version;
+        break;
+      }
+    }
+
+    if (cachedVersion !== version) {
+      message.reply(this.getLibraryUpdateMessage(name, version));
+      this.cacheManager.updateJsonValue(name, version);
+    }
+  }
+
+  private getLibraryUpdateMessage(name: string, version: string): string {
     let response = '';
     response += 'Library New Version Available : ' + name + '\n';
     response += 'Library Version : ' + version + '\n';
-    response += 'Library Commit : ' + commit + '\n';
-    response += 'Library Link : ' + link + '\n';
-    message.reply(response);
+    response += 'Github Link : ' + `https://github.com/${name}` + '\n';
+    response +=
+      'Github Link Releases : ' + `https://github.com/${name}/releases` + '\n';
+    return response;
   }
 }

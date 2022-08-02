@@ -9,6 +9,10 @@ export abstract class DependencyManager {
       baseURL: 'https://api.github.com/',
       responseType: 'json',
       timeout: 5000,
+      auth: {
+        username: process.env.GITHUB_CLIENT_NAME,
+        password: process.env.GITHUB_SECRETE,
+      },
     };
   }
 

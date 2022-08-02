@@ -25,6 +25,7 @@ const AndroidRepositoryManager_1 = require("../managers/AndroidRepositoryManager
 const fs = require("fs");
 const GithubRepositoriesTagsManager_1 = require("../managers/GithubRepositoriesTagsManager");
 const schedule_1 = require("@nestjs/schedule");
+const ChannelEvent_1 = require("../models/ChannelEvent");
 let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
     constructor(httpService) {
         this.httpService = httpService;
@@ -34,8 +35,10 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         this.executeClientsListeners();
     }
     getCurrentSupportedServices() {
+        ApplicationUtils_1.ApplicationUtils.printAppLog('Supported Platforms Started !!');
         const supportedPlatforms = process.env.SUPPORTED_SERVICES;
         if (!supportedPlatforms) {
+            ApplicationUtils_1.ApplicationUtils.printAppLog('No Supported Platforms Available !!');
             return [];
         }
         if (!supportedPlatforms.includes(',')) {
@@ -88,8 +91,17 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         });
         this.discordClient
             .login(this.getDiscordApplicationToken())
-            .then(() => console.log('Login Log'))
-            .catch((ex) => console.error(ex));
+            .then(() => {
+            if (this.channels == null) {
+                this.getChannelsInformation();
+            }
+            console.log('Discord Client Connected !!');
+        })
+            .catch((ex) => {
+            ApplicationUtils_1.ApplicationUtils.printAppLog('Discord Client Error : ' + ex.message);
+            console.error(ex);
+        });
+        ApplicationUtils_1.ApplicationUtils.printAppLog('Discord Client Started !!');
     }
     getChannelsInformation() {
         const fs = require('fs');
@@ -127,6 +139,7 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         }
         if (event.type == EventCommand_1.EventCommandType.GET_ANDROID_LIBRARIES) {
             new AndroidRepositoryManager_1.AndroidRepositoryManager(this.httpService).onImplementAction(event.target, message);
+            new GithubRepositoriesTagsManager_1.GithubRepositoriesTagsManager(this.httpService, ConfigurationService_1.ANDROID_JSON_FILE, 'Android', ConfigurationService_1.ANDROID_CACHE_JSON_FILE).onImplementAction('', message);
         }
         if (event.type == EventCommand_1.EventCommandType.GET_GITHUB_LIBRARIES) {
             new GithubRepositoriesTagsManager_1.GithubRepositoriesTagsManager(this.httpService, ConfigurationService_1.GENERAL_JSON_FILE, 'General', ConfigurationService_1.GENERAL_CACHE_JSON_FILE).onImplementAction('', message);
@@ -148,31 +161,69 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
             ApplicationUtils_1.ApplicationUtils.printAppLog(`${ConfigurationService_1.GENERAL_JSON_FILE} Already Exists ..`);
         }
     }
-    onSendDiscordMessageEventTrigger(message) {
+    onSendDiscordMessageEventTrigger(message, type) {
+        let targetSenderChannel = '';
+        if (this.channels != null) {
+            for (let i = 0; i < this.channels.length; i++) {
+                if (this.channels[i].name === 'Android Libraries' &&
+                    type == ChannelEvent_1.ChannelEvent.ANDROID) {
+                    targetSenderChannel = this.channels[i].id;
+                }
+                if (this.channels[i].name === 'Backend Libraries' &&
+                    type == ChannelEvent_1.ChannelEvent.BACKEND) {
+                    targetSenderChannel = this.channels[i].id;
+                }
+                if (this.channels[i].name === 'Github Libraries' &&
+                    type == ChannelEvent_1.ChannelEvent.GENERAL) {
+                    targetSenderChannel = this.channels[i].id;
+                }
+            }
+        }
         if (this.discordClient != null) {
-            this.discordClient.channels.cache.get('1001968096615071845').send(message);
+            this.discordClient.channels.cache.get(targetSenderChannel).send(message);
         }
     }
-    handleCron() {
-        console.log('Every minute');
-        this.onSendDiscordMessageEventTrigger('get libraries backend');
+    handleBackendCron() {
+        ApplicationUtils_1.ApplicationUtils.printAppLog('Backend Cron Job Started');
+        this.onSendDiscordMessageEventTrigger('get libraries backend', ChannelEvent_1.ChannelEvent.BACKEND);
+    }
+    handleAndroidCron() {
+        ApplicationUtils_1.ApplicationUtils.printAppLog('Android Cron Job Started');
+        this.onSendDiscordMessageEventTrigger('get libraries android', ChannelEvent_1.ChannelEvent.ANDROID);
+    }
+    handleGeneralCron() {
+        ApplicationUtils_1.ApplicationUtils.printAppLog('General Cron Job Started');
+        this.onSendDiscordMessageEventTrigger('get libraries general', ChannelEvent_1.ChannelEvent.GENERAL);
     }
     getChannels() {
         return this.channels;
     }
 };
-ConfigurationService.ANDROID_JSON_FILE = process.cwd() + '/libraries/android.json';
-ConfigurationService.BACKEND_JSON_FILE = process.cwd() + '/libraries/backend.json';
-ConfigurationService.BACKEND_CACHE_JSON_FILE = process.cwd() + '/libraries/backend-cache.json';
-ConfigurationService.GENERAL_JSON_FILE = process.cwd() + '/libraries/general.json';
-ConfigurationService.GENERAL_CACHE_JSON_FILE = process.cwd() + '/libraries/general-cache.json';
-ConfigurationService.CHANNELS_JSON_FILE = process.cwd() + '/libraries/channels.json';
+ConfigurationService.ANDROID_JSON_FILE = process.cwd() + '/src/libraries/android.json';
+ConfigurationService.ANDROID_CACHE_JSON_FILE = process.cwd() + '/src/libraries/cache/android-cache.json';
+ConfigurationService.BACKEND_JSON_FILE = process.cwd() + '/src/libraries/backend.json';
+ConfigurationService.BACKEND_CACHE_JSON_FILE = process.cwd() + '/src/libraries/cache/backend-cache.json';
+ConfigurationService.GENERAL_JSON_FILE = process.cwd() + '/src/libraries/general.json';
+ConfigurationService.GENERAL_CACHE_JSON_FILE = process.cwd() + '/src/libraries/cache/general-cache.json';
+ConfigurationService.CHANNELS_JSON_FILE = process.cwd() + '/src/libraries/channels.json';
 __decorate([
-    (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_4_HOURS),
+    (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_MINUTE),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], ConfigurationService.prototype, "handleCron", null);
+], ConfigurationService.prototype, "handleBackendCron", null);
+__decorate([
+    (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_MINUTE),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], ConfigurationService.prototype, "handleAndroidCron", null);
+__decorate([
+    (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_MINUTE),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], ConfigurationService.prototype, "handleGeneralCron", null);
 ConfigurationService = ConfigurationService_1 = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [axios_1.HttpService])

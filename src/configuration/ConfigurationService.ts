@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigurationServiceImplementation } from './ConfigurationServiceImplementation';
-import { Client, IntentsBitField, Message } from 'discord.js';
+import { Client, IntentsBitField, Message, TextChannel } from 'discord.js';
 import { ApplicationUtils } from '../utils/ApplicationUtils';
 import { ChannelModel } from '../models/ChannelModel';
 import { ConfigurationEventsManager } from './ConfigurationEventsManager';
@@ -12,21 +12,27 @@ import { HttpService } from '@nestjs/axios';
 import { AndroidRepositoryManager } from '../managers/AndroidRepositoryManager';
 import * as fs from 'fs';
 import { GithubRepositoriesTagsManager } from '../managers/GithubRepositoriesTagsManager';
-import { TextChannel } from 'discord.js';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { ChannelEvent } from '../models/ChannelEvent';
 
 @Injectable()
 export class ConfigurationService
   implements ConfigurationServiceImplementation
 {
-  public static ANDROID_JSON_FILE = process.cwd() + '/libraries/android.json';
-  public static BACKEND_JSON_FILE = process.cwd() + '/libraries/backend.json';
+  public static ANDROID_JSON_FILE =
+    process.cwd() + '/src/libraries/android.json';
+  public static ANDROID_CACHE_JSON_FILE =
+    process.cwd() + '/src/libraries/cache/android-cache.json';
+  public static BACKEND_JSON_FILE =
+    process.cwd() + '/src/libraries/backend.json';
   public static BACKEND_CACHE_JSON_FILE =
-    process.cwd() + '/libraries/backend-cache.json';
-  public static GENERAL_JSON_FILE = process.cwd() + '/libraries/general.json';
+    process.cwd() + '/src/libraries/cache/backend-cache.json';
+  public static GENERAL_JSON_FILE =
+    process.cwd() + '/src/libraries/general.json';
   public static GENERAL_CACHE_JSON_FILE =
-    process.cwd() + '/libraries/general-cache.json';
-  public static CHANNELS_JSON_FILE = process.cwd() + '/libraries/channels.json';
+    process.cwd() + '/src/libraries/cache/general-cache.json';
+  public static CHANNELS_JSON_FILE =
+    process.cwd() + '/src/libraries/channels.json';
 
   private eventsManager: ConfigurationEventsManager =
     new ConfigurationEventsManager(this);
@@ -38,8 +44,10 @@ export class ConfigurationService
   }
 
   getCurrentSupportedServices(): Array<string> {
+    ApplicationUtils.printAppLog('Supported Platforms Started !!');
     const supportedPlatforms = process.env.SUPPORTED_SERVICES;
     if (!supportedPlatforms) {
+      ApplicationUtils.printAppLog('No Supported Platforms Available !!');
       return [];
     }
 
@@ -106,8 +114,18 @@ export class ConfigurationService
 
     this.discordClient
       .login(this.getDiscordApplicationToken())
-      .then(() => console.log('Login Log'))
-      .catch((ex) => console.error(ex));
+      .then(() => {
+        if (this.channels == null) {
+          this.getChannelsInformation();
+        }
+        console.log('Discord Client Connected !!');
+      })
+      .catch((ex) => {
+        ApplicationUtils.printAppLog('Discord Client Error : ' + ex.message);
+        console.error(ex);
+      });
+
+    ApplicationUtils.printAppLog('Discord Client Started !!');
   }
 
   getChannelsInformation() {
@@ -176,6 +194,13 @@ export class ConfigurationService
         event.target,
         message,
       );
+
+      new GithubRepositoriesTagsManager(
+        this.httpService,
+        ConfigurationService.ANDROID_JSON_FILE,
+        'Android',
+        ConfigurationService.ANDROID_CACHE_JSON_FILE,
+      ).onImplementAction('', message);
     }
 
     if (event.type == EventCommandType.GET_GITHUB_LIBRARIES) {
@@ -216,20 +241,67 @@ export class ConfigurationService
     }
   }
 
-  onSendDiscordMessageEventTrigger(message: string) {
+  onSendDiscordMessageEventTrigger(message: string, type: ChannelEvent) {
+    let targetSenderChannel = '';
+    if (this.channels != null) {
+      for (let i = 0; i < this.channels.length; i++) {
+        if (
+          this.channels[i].name === 'Android Libraries' &&
+          type == ChannelEvent.ANDROID
+        ) {
+          targetSenderChannel = this.channels[i].id;
+        }
+
+        if (
+          this.channels[i].name === 'Backend Libraries' &&
+          type == ChannelEvent.BACKEND
+        ) {
+          targetSenderChannel = this.channels[i].id;
+        }
+
+        if (
+          this.channels[i].name === 'Github Libraries' &&
+          type == ChannelEvent.GENERAL
+        ) {
+          targetSenderChannel = this.channels[i].id;
+        }
+      }
+    }
+
     if (this.discordClient != null) {
       (
         this.discordClient.channels.cache.get(
-          '1001968096615071845',
+          targetSenderChannel,
         ) as TextChannel
       ).send(message);
     }
   }
 
-  @Cron(CronExpression.EVERY_4_HOURS)
-  handleCron() {
-    console.log('Every minute');
-    this.onSendDiscordMessageEventTrigger('get libraries backend');
+  @Cron(CronExpression.EVERY_MINUTE)
+  handleBackendCron() {
+    ApplicationUtils.printAppLog('Backend Cron Job Started');
+    this.onSendDiscordMessageEventTrigger(
+      'get libraries backend',
+      ChannelEvent.BACKEND,
+    );
+  }
+
+  @Cron(CronExpression.EVERY_MINUTE)
+  handleAndroidCron() {
+    ApplicationUtils.printAppLog('Android Cron Job Started');
+    this.onSendDiscordMessageEventTrigger(
+      'get libraries android',
+      ChannelEvent.ANDROID,
+    );
+  }
+
+  @Cron(CronExpression.EVERY_MINUTE)
+  handleGeneralCron() {
+    ApplicationUtils.printAppLog('General Cron Job Started');
+    this.onSendDiscordMessageEventTrigger(
+      'get libraries general',
+      ChannelEvent.GENERAL,
+    );
   }
 
   getChannels(): Array<ChannelModel> {

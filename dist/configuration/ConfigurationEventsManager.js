@@ -109,7 +109,7 @@ class ConfigurationEventsManager {
                     target: command.trim(),
                 }, message);
             }
-            else if (command === 'github') {
+            else if (command === 'general') {
                 this.service.onEventExecute({
                     type: EventCommand_1.EventCommandType.GET_GITHUB_LIBRARIES,
                     target: command.trim(),

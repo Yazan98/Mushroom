@@ -2,29 +2,28 @@ import { HttpService } from '@nestjs/axios';
 import { DependencyManager } from './DependencyManager';
 import { Message } from 'discord.js';
 import * as fs from 'fs';
-
-import {
-  GoogleCacheArtifact,
-  GoogleMavenArtifact,
-  GoogleMavenLibrary,
-} from '../models/GoogleMavenLibrary';
-import { timer } from 'rxjs';
-import { LibraryUpdateModel } from '../models/LibraryUpdateModel';
+import * as xml2js from 'xml2js';
+import { LibraryVersionCache } from '../models/LibraryVersionCache';
+import { CacheFileManager } from './CacheFileManager';
 
 export class AndroidRepositoryManager extends DependencyManager {
   public static ANDROID_MAVEN_PATH = '/android/maven2/';
   public static ANDROID_ALL_LIBRARIES = 'master-index.xml';
-  public static GROUP_ARTIFACTS = '/group-index.xml';
   private static CONSOLE_LOGGING_KEY = '[Google Dependencies]';
-  private static SKIP_META_DATA_TAG = 'metadata';
-  private static SKIP_XML_HEADER_TAG = "xml version='1.0'";
+  public static GROUP_ARTIFACTS = '/group-index.xml';
   private static GOOGLE_LIBRARIES_FILE =
-    process.cwd() + '/libraries/google-libraries.json';
+    process.cwd() + '/src/libraries/google-libraries.json';
   private static GOOGLE_LIBRARIES_CACHE_FILE =
-    process.cwd() + '/libraries/google-cache.json';
+    process.cwd() + '/src/libraries/cache/google-cache.json';
+  private cachedLibraries: Array<LibraryVersionCache> = null;
+  private cacheManager: CacheFileManager = null;
 
   constructor(private readonly httpService: HttpService) {
     super();
+    this.cacheManager = new CacheFileManager(
+      AndroidRepositoryManager.GOOGLE_LIBRARIES_CACHE_FILE,
+    );
+    this.cachedLibraries = this.cacheManager.onPrepareCacheFileLibraries();
   }
 
   onImplementAction(event: string, message: Message) {
@@ -54,310 +53,120 @@ export class AndroidRepositoryManager extends DependencyManager {
    * @private
    */
   private async validatePackagesResponse(response: string, message: Message) {
-    console.log(
-      AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
-        ' Start Validating Response ===================================',
-    );
-    const librariesArray: Array<string> = new Array<string>();
-    const responseValue = response.split('\n');
-    for (let i = 0; i < responseValue.length; i++) {
-      if (
-        !responseValue[i].includes(
-          AndroidRepositoryManager.SKIP_XML_HEADER_TAG,
-        ) &&
-        !responseValue[i].includes(AndroidRepositoryManager.SKIP_META_DATA_TAG)
-      ) {
-        const targetValue = responseValue[i].replace('<', '').replace('/>', '');
-        console.log(
-          AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
-            ' Library : ' +
-            targetValue,
+    xml2js.parseString(response, (err, result) => {
+      if (err) {
+        throw err;
+      }
+
+      const json = JSON.stringify(result, null, 4);
+      fs.writeFileSync(AndroidRepositoryManager.GOOGLE_LIBRARIES_FILE, json);
+      this.onValidateJsonContentVersions(result, message);
+    });
+  }
+
+  private async onValidateJsonContentVersions(result: any, message: Message) {
+    const librariesMap = new Map(Object.entries(result.metadata));
+    for (const key of librariesMap.keys()) {
+      await this.getLibraryInformation(key, message);
+    }
+  }
+
+  private async getLibraryInformation(name: string, message: Message) {
+    await this.getGoogleMavenRepositoriesInstance()
+      .get(
+        AndroidRepositoryManager.ANDROID_MAVEN_PATH +
+          name.split('.').join('/').trim() +
+          AndroidRepositoryManager.GROUP_ARTIFACTS,
+        {
+          method: 'get',
+        },
+      )
+      .then((response) => {
+        this.validateLibraryVersionArtifacts(
+          response.data.toString(),
+          name,
+          message,
         );
-        librariesArray.push(targetValue);
-      }
-    }
-
-    await this.getLibrariesVersions(librariesArray, message);
-    console.log(
-      AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
-        ' End Validating Response ===================================',
-    );
-  }
-
-  /**
-   * This Method Will Loop on All Groups To Get All Artifacts and Versions of the Group Id
-   * And Filter Them Then Add Them to Filtered Array With (GroupId, Artifacts, Versions)
-   * @param libraries
-   * @private
-   */
-  private async getLibrariesVersions(
-    libraries: Array<string>,
-    message: Message,
-  ) {
-    if (libraries == null) {
-      return;
-    }
-
-    const librariesArray: Array<GoogleMavenLibrary> =
-      new Array<GoogleMavenLibrary>();
-    console.log(
-      AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
-        ' Start Getting Libraries Versions ===================================',
-    );
-    for (let i = 0; i < libraries.length; i++) {
-      if (libraries[i] === '') {
-        continue;
-      }
-
-      await timer(1000);
-      console.log('Start Validating Group Index For Path : ' + libraries[i]);
-      await this.getGoogleMavenRepositoriesInstance()
-        .get(
-          AndroidRepositoryManager.ANDROID_MAVEN_PATH +
-            libraries[i].split('.').join('/').trim() +
-            AndroidRepositoryManager.GROUP_ARTIFACTS,
-          {
-            method: 'get',
-          },
-        )
-        .then((response) => {
-          const artifacts = this.getArtifactsByGroupRequest(
-            response.data.toString().split('\n'),
-          );
-          librariesArray.push({
-            groupId: libraries[i],
-            artifacts: artifacts,
-          });
-        })
-        .catch((exception) => {
-          console.error(
-            AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
-              ' Exception : ' +
-              exception,
-          );
-        });
-    }
-
-    this.validateLibrariesUpdatedVersions(librariesArray, message);
-    console.log(
-      AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
-        ' End Getting Libraries Versions ===================================',
-    );
-  }
-
-  /**
-   * Artifacts Names and Versions Returned in Same Xml File
-   * Need To Split all of Them and Remove UnNessessary Lines
-   * Then Filter All of them to return Artifacts Returned From Group Id
-   * @param response
-   * @private
-   */
-  private getArtifactsByGroupRequest(
-    response: Array<string>,
-  ): Array<GoogleMavenArtifact> {
-    const artifacts = Array<GoogleMavenArtifact>();
-    for (let i = 0; i < response.length; i++) {
-      if (i == 0 || i == 1 || i == response.length - 2 || response[i] === '') {
-        continue;
-      }
-
-      const libraryInfo = response[i].trim();
-      const artifactName = libraryInfo.split(' ')[0].replace('<', '');
-      const versions = libraryInfo.split('="')[1];
-      artifacts.push({
-        name: artifactName,
-        versions: versions.replace('"/>', '').split(','),
+      })
+      .catch((exception) => {
+        console.error(
+          AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
+            ' Exception : ' +
+            exception,
+        );
       });
-    }
-    return artifacts;
   }
 
-  /**
-   * Here is the Last Point from Google Maven Repositories Libraries
-   * After Loop on all of them to get All Artifacts, Versions of Artifacts
-   * Will Start Validating Via Cached Versions in Last Update Inside Saved Json File
-   *
-   * Will check If the File is not Exists Will Push All Messages to Slack Channel with The Latest Versions of Each Group
-   * If the Json File Exists, Will Check The Cached Version of Each Library and if the Library Has new Version Will Send Slack Message
-   * With Provided Application Token in Json File Too
-   * @param librariesArray
-   * @private
-   */
-  private validateLibrariesUpdatedVersions(
-    librariesArray: Array<GoogleMavenLibrary>,
+  private async validateLibraryVersionArtifacts(
+    content: string,
+    library: string,
     message: Message,
   ) {
-    this.createGoogleLibrariesFile(librariesArray);
-
-    if (!fs.existsSync(AndroidRepositoryManager.GOOGLE_LIBRARIES_CACHE_FILE)) {
-      AndroidRepositoryManager.createGoogleCacheFile(librariesArray);
-    } else {
-      this.validateUpdatedLibraries(librariesArray, message);
-    }
-  }
-
-  private validateUpdatedLibraries(
-    librariesArray: Array<GoogleMavenLibrary>,
-    message: Message,
-  ) {
-    fs.readFile(
-      AndroidRepositoryManager.GOOGLE_LIBRARIES_CACHE_FILE,
-      'utf8',
-      function readFileCallback(err, data) {
-        if (err) {
-          console.log(err);
-        } else {
-          AndroidRepositoryManager.validateUpdatedDependencies(
-            data,
-            librariesArray,
-            message,
-          );
-          AndroidRepositoryManager.createGoogleCacheFile(librariesArray);
-        }
-      },
-    );
-  }
-
-  /**
-   * IT's just a Temp File to Save All Google Libraries inside Json File
-   * @param librariesArray
-   * @private
-   */
-  private createGoogleLibrariesFile(librariesArray: Array<GoogleMavenLibrary>) {
-    const googleLibrariesObject = {
-      libraries: [],
-    };
-
-    for (let i = 0; i < librariesArray.length; i++) {
-      const library = librariesArray[i];
-      googleLibrariesObject.libraries.push({
-        groupId: library.groupId.trim(),
-        artifacts: library.artifacts,
-      });
-    }
-
-    const json = JSON.stringify(googleLibrariesObject, null, '\t');
-    fs.writeFile(
-      AndroidRepositoryManager.GOOGLE_LIBRARIES_FILE,
-      json,
-      'utf8',
-      (exception) => {
-        if (exception != null) {
-          console.error(
-            AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
-              ' Exception : ' +
-              exception,
-          );
-        }
-      },
-    );
-  }
-
-  /**
-   * Create Google Cache File with Latest Libraries Versions
-   * This File if Not Exists Will Create new One for First Time
-   * Then Will Update It After Checking The Version of the New Response Inside Libraries Array
-   * @param librariesArray
-   * @private
-   */
-  public static createGoogleCacheFile(
-    librariesArray: Array<GoogleMavenLibrary>,
-  ) {
-    const googleCacheObject = {
-      libraries: [],
-    };
-
-    for (let i = 0; i < librariesArray.length; i++) {
-      const library = librariesArray[i];
-      const artifacts = Array<GoogleCacheArtifact>();
-      for (let j = 0; j < library.artifacts.length; j++) {
-        const currentArtifact = library.artifacts[j];
-        artifacts.push({
-          artifact: currentArtifact.name,
-          version: currentArtifact.versions[0],
-        });
+    xml2js.parseString(content, (err, result) => {
+      if (err) {
+        throw err;
       }
 
-      googleCacheObject.libraries.push({
-        groupId: library.groupId.trim(),
-        artifacts: artifacts,
-      });
-    }
-
-    const json = JSON.stringify(googleCacheObject, null, '\t');
-    fs.writeFile(
-      AndroidRepositoryManager.GOOGLE_LIBRARIES_CACHE_FILE,
-      json,
-      'utf8',
-      (exception) => {
-        if (exception != null) {
-          console.error(
-            AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
-              ' Exception : ' +
-              exception,
-          );
-        }
-      },
-    );
-  }
-
-  public static validateUpdatedDependencies(
-    data: string,
-    librariesArray: Array<GoogleMavenLibrary>,
-    message: Message,
-  ) {
-    let googleCacheObject = {
-      libraries: [],
-    };
-
-    const librariesToUpdate = new Array<LibraryUpdateModel>();
-    googleCacheObject = JSON.parse(data);
-    for (let i = 0; i < googleCacheObject.libraries.length; i++) {
-      const library = googleCacheObject.libraries[i];
-      for (let j = 0; j < librariesArray.length; j++) {
-        const newLibrary = librariesArray[i];
-        if (newLibrary.groupId.includes(library.groupId)) {
-          if (
-            newLibrary.artifacts[0].versions[0] !== library.artifacts[0].version
-          ) {
-            librariesToUpdate.push({
-              groupId: newLibrary.groupId,
-              version: newLibrary.artifacts[0].versions[0],
-              artifact: newLibrary.artifacts[0].name,
-              url: '',
-              isGithubSource: false,
-              releaseUrl: '',
-              name: '',
-            });
+      const librariesMap = new Map(Object.entries(result));
+      for (const key of librariesMap.keys()) {
+        // await this.getLibraryInformation(key);
+        if (librariesMap.has(key)) {
+          const artifacts = new Map(Object.entries(librariesMap.get(key)));
+          for (const key of artifacts.keys()) {
+            const artifact = artifacts.get(key);
+            const artifactVersionsContainer = new Map(Object.entries(artifact));
+            const versions = new Map(
+              Object.entries(artifactVersionsContainer.get('0')),
+            ).get('$');
+            const version = new Map(Object.entries(versions))
+              .get('versions')
+              .toString();
+            if (version.includes(',')) {
+              this.onValidateLibraryVersion(
+                library,
+                key,
+                version.split(',')[0],
+                message,
+              );
+            } else {
+              this.onValidateLibraryVersion(library, key, version, message);
+            }
           }
         }
       }
-    }
-
-    this.onSendMessagesGoogleMavenUpdate(librariesToUpdate, message);
+    });
   }
 
-  private static onSendMessagesGoogleMavenUpdate(
-    librariesToUpdate: Array<LibraryUpdateModel>,
+  private async onValidateLibraryVersion(
+    library: string,
+    artifact: string,
+    version: string,
     message: Message,
   ) {
-    if (librariesToUpdate.length == 0) {
-      message.reply('Google Maven Central No Artifact Updated !!');
-      return;
+    let cachedVersion = '';
+    for (let i = 0; i < this.cachedLibraries.length; i++) {
+      if (this.cachedLibraries[i].name === library + ':' + artifact) {
+        cachedVersion = this.cachedLibraries[i].version;
+        break;
+      }
     }
 
-    for (let i = 0; i < librariesToUpdate.length; i++) {
-      this.onSendMessage(message, librariesToUpdate[i]);
+    if (cachedVersion !== version) {
+      message.reply(this.getMessage(library, artifact, version));
+      this.cacheManager.updateJsonValue(`${library}:${artifact}`, version);
     }
   }
 
-  private static onSendMessage(message: Message, model: LibraryUpdateModel) {
+  private getMessage(name: string, artifact: string, version: string): string {
     let response = '';
-    response += '============= Library Update Start =============' + ' \n';
-    response += 'Library Update : ' + model.artifact + ' \n';
-    response += 'Library Group Id : ' + model.groupId + ' \n';
-    response += 'Library Version : ' + model.version + ' \n';
-    response += '============= Library Update End =============' + ' \n';
-    message.reply(response);
+    response += 'Official Google Library Update : ' + name + '\n';
+    response += 'Library has New Version : ' + name + '\n';
+    response += 'Artifact : ' + artifact + '\n';
+    response += 'Version : ' + version + '\n';
+    response +=
+      'Library Link : ' +
+      `https://maven.google.com/web/index.html#${name}:${artifact}:${version}` +
+      '\n';
+    return response;
   }
 }

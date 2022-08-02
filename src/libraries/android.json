@@ -1,0 +1,16 @@
+{
+  "libraries": [
+    {
+      "name": "Yazan98/Vanite",
+      "version": "1.0.0"
+    },
+    {
+      "name": "Yazan98/Markdown-Compose",
+      "version": "1.0.0"
+    },
+    {
+      "name": "square/retrofit",
+      "version": "2.8.2"
+    }
+  ]
+}

@@ -150,7 +150,7 @@ export class ConfigurationEventsManager {
           },
           message,
         );
-      } else if (command === 'github') {
+      } else if (command === 'general') {
         this.service.onEventExecute(
           {
             type: EventCommandType.GET_GITHUB_LIBRARIES,
