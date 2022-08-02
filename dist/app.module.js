@@ -23,6 +23,7 @@ AppModule = __decorate([
                 cache: true,
                 envFilePath: '.env',
                 isGlobal: true,
+                ignoreEnvFile: true,
             }),
             schedule_1.ScheduleModule.forRoot(),
             http_module_1.HttpModule,

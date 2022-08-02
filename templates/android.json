@@ -11,6 +11,238 @@
     {
       "name": "square/retrofit",
       "version": "2.8.2"
+    },
+    {
+      "name": "Yazan98/Shake-Reporter-Kt",
+      "version": "2.8.2"
+    },
+    {
+      "name": "Yazan98/Palex-Adapter",
+      "version": "2.8.2"
+    },
+    {
+      "name": "Yazan98/Issuer-kt",
+      "version": "2.8.2"
+    },
+    {
+      "name": "hi-manshu/Kalendar",
+      "version": "2.8.2"
+    },
+    {
+      "name": "square/papa",
+      "version": "2.8.2"
+    },
+    {
+      "name": "kasem-sm/SlimeKT",
+      "version": "2.8.2"
+    },
+    {
+      "name": "square/moshi",
+      "version": "2.8.2"
+    },
+    {
+      "name": "RetroMusicPlayer/RetroMusicPlayer",
+      "version": "2.8.2"
+    },
+    {
+      "name": "mozilla-mobile/fenix",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JetBrains/compose-jb",
+      "version": "2.8.2"
+    },
+    {
+      "name": "corona-warn-app/cwa-app-android",
+      "version": "2.8.2"
+    },
+    {
+      "name": "ZacSweers/MoshiX",
+      "version": "2.8.2"
+    },
+    {
+      "name": "android/compose-samples",
+      "version": "2.8.2"
+    },
+    {
+      "name": "GetStream/stream-chat-android",
+      "version": "2.8.2"
+    },
+    {
+      "name": "reddit/IndicatorFastScroll",
+      "version": "2.8.2"
+    },
+    {
+      "name": "termux/termux-app",
+      "version": "2.8.2"
+    },
+    {
+      "name": "islem19/AOSP-Pure-Launcher",
+      "version": "2.8.2"
+    },
+    {
+      "name": "Tapadoo/Alerter",
+      "version": "2.8.2"
+    },
+    {
+      "name": "fennifith/Status",
+      "version": "2.8.2"
+    },
+    {
+      "name": "amdev01/FloatingVolume",
+      "version": "2.8.2"
+    },
+    {
+      "name": "timusus/Shuttle",
+      "version": "2.8.2"
+    },
+    {
+      "name": "sduduzog/slim-launcher",
+      "version": "2.8.2"
+    },
+    {
+      "name": "tanujnotes/Olauncher",
+      "version": "2.8.2"
+    },
+    {
+      "name": "KunalRaghav/YAL",
+      "version": "2.8.2"
+    },
+    {
+      "name": "finnmglas/Launcher",
+      "version": "2.8.2"
+    },
+    {
+      "name": "jwstegemann/fritz2",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/dependency-watch",
+      "version": "2.8.2"
+    },
+    {
+      "name": "android/android-studio-poet",
+      "version": "2.8.2"
+    },
+    {
+      "name": "kotest/kotest",
+      "version": "2.8.2"
+    },
+    {
+      "name": "futuredapp/hauler",
+      "version": "2.8.2"
+    },
+    {
+      "name": "futuredapp/arkitekt",
+      "version": "2.8.2"
+    },
+    {
+      "name": "vipulasri/Timeline-View",
+      "version": "2.8.2"
+    },
+    {
+      "name": "danger/kotlin",
+      "version": "2.8.2"
+    },
+    {
+      "name": "saket/InboxRecyclerView",
+      "version": "2.8.2"
+    },
+    {
+      "name": "oppia/oppia-android",
+      "version": "2.8.2"
+    },
+    {
+      "name": "vector-im/element-android",
+      "version": "2.8.2"
+    },
+    {
+      "name": "google/flexbox-layout",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/ui-spy",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/timber",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/dependency-tree-diff",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/mosaic",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/adb-event-mirror",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/SdkSearch",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/picnic",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/crossword",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/diffuse",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/RxBinding",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/okhttp-idling-resource",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/RxRelay",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/dagger-reflect",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JakeWharton/dodo",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JetBrains/kotlin",
+      "version": "2.8.2"
+    },
+    {
+      "name": "Kotlin/kotlinx.coroutines",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JetBrains/gradle-intellij-plugin",
+      "version": "2.8.2"
+    },
+    {
+      "name": "JetBrains/compose-jb",
+      "version": "2.8.2"
+    },
+    {
+      "name": "gradle/gradle",
+      "version": "2.8.2"
+    },
+    {
+      "name": "Kotlin/kotlinx.serialization",
+      "version": "2.8.2"
+    },
+    {
+      "name": "Kotlin/kotlinx-benchmark",
+      "version": "2.8.2"
     }
   ]
 }
