@@ -37,6 +37,7 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
     getCurrentSupportedServices() {
         ApplicationUtils_1.ApplicationUtils.printAppLog('Supported Platforms Started !!');
         const supportedPlatforms = process.env.SUPPORTED_SERVICES;
+        ApplicationUtils_1.ApplicationUtils.printAppLog('Supported Platforms : ' + supportedPlatforms);
         if (!supportedPlatforms) {
             ApplicationUtils_1.ApplicationUtils.printAppLog('No Supported Platforms Available !!');
             return [];
@@ -62,7 +63,9 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
     }
     executeClientsListeners() {
         const supportedServices = this.getCurrentSupportedServices();
+        ApplicationUtils_1.ApplicationUtils.printAppLog('Clients Start ...');
         for (let i = 0; i < supportedServices.length; i++) {
+            ApplicationUtils_1.ApplicationUtils.printAppLog('Init Client : ' + supportedServices[i]);
             if (supportedServices[i] === 'slack') {
                 this.executeSlackListener();
             }
@@ -72,6 +75,7 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         }
     }
     executeDiscordListener() {
+        ApplicationUtils_1.ApplicationUtils.printAppLog('Load Discord Client ...');
         this.discordClient = new discord_js_1.Client({
             intents: [
                 discord_js_1.IntentsBitField.Flags.GuildMessages,
@@ -81,7 +85,7 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         });
         this.discordClient.on('messageCreate', (message) => {
             if (message.author.bot && !message.content.includes('get libraries')) {
-                console.log('Ignoring bot message!');
+                ApplicationUtils_1.ApplicationUtils.printAppLog('Ignoring bot message!');
                 return;
             }
             if (this.channels == null) {
@@ -89,17 +93,18 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
             }
             this.eventsManager.onEventTriggered(message.content, message.channelId, message);
         });
+        ApplicationUtils_1.ApplicationUtils.printAppLog('Discord Client : ' + this.getDiscordApplicationToken());
         this.discordClient
             .login(this.getDiscordApplicationToken())
             .then(() => {
             if (this.channels == null) {
                 this.getChannelsInformation();
             }
-            console.log('Discord Client Connected !!');
+            ApplicationUtils_1.ApplicationUtils.printAppLog('Discord Client Connected !!');
         })
             .catch((ex) => {
             ApplicationUtils_1.ApplicationUtils.printAppLog('Discord Client Error : ' + ex.message);
-            console.error(ex);
+            ApplicationUtils_1.ApplicationUtils.printAppLog(ex);
         });
         ApplicationUtils_1.ApplicationUtils.printAppLog('Discord Client Started !!');
     }
@@ -111,7 +116,7 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         for (let i = 0; i < channelsInfo.length; i++) {
             this.channels.push(new ChannelModel_1.ChannelModel(channelsInfo[i].id, channelsInfo[i].name));
         }
-        console.log('Channels : ' + this.channels);
+        ApplicationUtils_1.ApplicationUtils.printAppLog('Channels : ' + this.channels);
     }
     getChannelNameById(id) {
         if (this.channels == null)

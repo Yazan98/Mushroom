@@ -46,6 +46,7 @@ export class ConfigurationService
   getCurrentSupportedServices(): Array<string> {
     ApplicationUtils.printAppLog('Supported Platforms Started !!');
     const supportedPlatforms = process.env.SUPPORTED_SERVICES;
+    ApplicationUtils.printAppLog('Supported Platforms : ' + supportedPlatforms);
     if (!supportedPlatforms) {
       ApplicationUtils.printAppLog('No Supported Platforms Available !!');
       return [];
@@ -77,7 +78,9 @@ export class ConfigurationService
 
   executeClientsListeners() {
     const supportedServices = this.getCurrentSupportedServices();
+    ApplicationUtils.printAppLog('Clients Start ...');
     for (let i = 0; i < supportedServices.length; i++) {
+      ApplicationUtils.printAppLog('Init Client : ' + supportedServices[i]);
       if (supportedServices[i] === 'slack') {
         this.executeSlackListener();
       } else {
@@ -87,6 +90,7 @@ export class ConfigurationService
   }
 
   executeDiscordListener() {
+    ApplicationUtils.printAppLog('Load Discord Client ...');
     this.discordClient = new Client({
       intents: [
         IntentsBitField.Flags.GuildMessages,
@@ -97,7 +101,7 @@ export class ConfigurationService
 
     this.discordClient.on('messageCreate', (message: Message) => {
       if (message.author.bot && !message.content.includes('get libraries')) {
-        console.log('Ignoring bot message!');
+        ApplicationUtils.printAppLog('Ignoring bot message!');
         return;
       }
 
@@ -112,17 +116,20 @@ export class ConfigurationService
       );
     });
 
+    ApplicationUtils.printAppLog(
+      'Discord Client : ' + this.getDiscordApplicationToken(),
+    );
     this.discordClient
       .login(this.getDiscordApplicationToken())
       .then(() => {
         if (this.channels == null) {
           this.getChannelsInformation();
         }
-        console.log('Discord Client Connected !!');
+        ApplicationUtils.printAppLog('Discord Client Connected !!');
       })
       .catch((ex) => {
         ApplicationUtils.printAppLog('Discord Client Error : ' + ex.message);
-        console.error(ex);
+        ApplicationUtils.printAppLog(ex);
       });
 
     ApplicationUtils.printAppLog('Discord Client Started !!');
@@ -143,7 +150,7 @@ export class ConfigurationService
       );
     }
 
-    console.log('Channels : ' + this.channels);
+    ApplicationUtils.printAppLog('Channels : ' + this.channels);
   }
 
   getChannelNameById(id: string): string {

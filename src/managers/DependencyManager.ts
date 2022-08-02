@@ -1,5 +1,6 @@
 import { Message } from 'discord.js';
 import axios, { Axios, AxiosRequestConfig } from 'axios';
+import { ApplicationUtils } from '../utils/ApplicationUtils';
 
 export abstract class DependencyManager {
   abstract onImplementAction(event: string, message: Message);
@@ -25,7 +26,7 @@ export abstract class DependencyManager {
     });
 
     instance.interceptors.request.use((request) => {
-      console.log('Google Starting Request', request.url);
+      ApplicationUtils.printAppLog('Google Starting Request : ' + request.url);
       return request;
     });
 

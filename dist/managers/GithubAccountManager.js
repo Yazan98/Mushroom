@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GithubAccountManager = void 0;
 const DependencyManager_1 = require("./DependencyManager");
+const ApplicationUtils_1 = require("../utils/ApplicationUtils");
 class GithubAccountManager extends DependencyManager_1.DependencyManager {
     constructor(httpService) {
         super();
@@ -14,7 +15,7 @@ class GithubAccountManager extends DependencyManager_1.DependencyManager {
             message.reply(GithubAccountManager.getMessageBody(result.data));
         })
             .catch((ex) => {
-            console.log('Error : ' + ex);
+            ApplicationUtils_1.ApplicationUtils.printAppLog('Error : ' + ex);
             message.reply('Failed to Get User Information With Id : ' + event);
         });
     }

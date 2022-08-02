@@ -5,6 +5,7 @@ import * as fs from 'fs';
 import * as xml2js from 'xml2js';
 import { LibraryVersionCache } from '../models/LibraryVersionCache';
 import { CacheFileManager } from './CacheFileManager';
+import { ApplicationUtils } from '../utils/ApplicationUtils';
 
 export class AndroidRepositoryManager extends DependencyManager {
   public static ANDROID_MAVEN_PATH = '/android/maven2/';
@@ -35,12 +36,14 @@ export class AndroidRepositoryManager extends DependencyManager {
       .then((response) => {
         this.validatePackagesResponse(response.data.toString(), message).catch(
           (exception) => {
-            console.error('Error Triggered : ' + ' Exception : ' + exception);
+            ApplicationUtils.printAppLog(
+              'Error Triggered : ' + ' Exception : ' + exception,
+            );
           },
         );
       })
       .catch((ex) => {
-        console.error(ex);
+        ApplicationUtils.printAppLog(ex);
         message.reply('Something Wrong With Google Maven Repository');
       });
   }
@@ -89,7 +92,7 @@ export class AndroidRepositoryManager extends DependencyManager {
         );
       })
       .catch((exception) => {
-        console.error(
+        ApplicationUtils.printAppLog(
           AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
             ' Exception : ' +
             exception,

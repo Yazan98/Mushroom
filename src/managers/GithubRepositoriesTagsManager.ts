@@ -4,6 +4,7 @@ import { HttpService } from '@nestjs/axios';
 import { GithubRepositoryTag } from '../models/GithubRepositoryTag';
 import { LibraryVersionCache } from '../models/LibraryVersionCache';
 import { CacheFileManager } from './CacheFileManager';
+import { ApplicationUtils } from '../utils/ApplicationUtils';
 
 export class GithubRepositoriesTagsManager extends DependencyManager {
   private cachedLibraries: Array<LibraryVersionCache> = null;
@@ -59,7 +60,7 @@ export class GithubRepositoriesTagsManager extends DependencyManager {
         }
       })
       .catch((ex) => {
-        console.error(ex);
+        ApplicationUtils.printAppLog(ex);
         message.reply(
           'Something Wrong While Processing ' +
             this.mode +

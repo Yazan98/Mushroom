@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GithubRepositoriesTagsManager = void 0;
 const DependencyManager_1 = require("./DependencyManager");
 const CacheFileManager_1 = require("./CacheFileManager");
+const ApplicationUtils_1 = require("../utils/ApplicationUtils");
 class GithubRepositoriesTagsManager extends DependencyManager_1.DependencyManager {
     constructor(httpService, fileName, mode, cacheFile) {
         super();
@@ -40,7 +41,7 @@ class GithubRepositoriesTagsManager extends DependencyManager_1.DependencyManage
             }
         })
             .catch((ex) => {
-            console.error(ex);
+            ApplicationUtils_1.ApplicationUtils.printAppLog(ex);
             message.reply('Something Wrong While Processing ' +
                 this.mode +
                 ' Libraries : ' +

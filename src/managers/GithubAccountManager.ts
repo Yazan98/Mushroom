@@ -2,6 +2,7 @@ import { DependencyManager } from './DependencyManager';
 import { Message } from 'discord.js';
 import { GithubUser } from '../models/GithubUser';
 import { HttpService } from '@nestjs/axios';
+import { ApplicationUtils } from '../utils/ApplicationUtils';
 
 export class GithubAccountManager extends DependencyManager {
   constructor(private readonly httpService: HttpService) {
@@ -15,7 +16,7 @@ export class GithubAccountManager extends DependencyManager {
         message.reply(GithubAccountManager.getMessageBody(result.data));
       })
       .catch((ex) => {
-        console.log('Error : ' + ex);
+        ApplicationUtils.printAppLog('Error : ' + ex);
         message.reply('Failed to Get User Information With Id : ' + event);
       });
   }

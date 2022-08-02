@@ -5,6 +5,7 @@ const DependencyManager_1 = require("./DependencyManager");
 const fs = require("fs");
 const xml2js = require("xml2js");
 const CacheFileManager_1 = require("./CacheFileManager");
+const ApplicationUtils_1 = require("../utils/ApplicationUtils");
 class AndroidRepositoryManager extends DependencyManager_1.DependencyManager {
     constructor(httpService) {
         super();
@@ -20,11 +21,11 @@ class AndroidRepositoryManager extends DependencyManager_1.DependencyManager {
             AndroidRepositoryManager.ANDROID_ALL_LIBRARIES)
             .then((response) => {
             this.validatePackagesResponse(response.data.toString(), message).catch((exception) => {
-                console.error('Error Triggered : ' + ' Exception : ' + exception);
+                ApplicationUtils_1.ApplicationUtils.printAppLog('Error Triggered : ' + ' Exception : ' + exception);
             });
         })
             .catch((ex) => {
-            console.error(ex);
+            ApplicationUtils_1.ApplicationUtils.printAppLog(ex);
             message.reply('Something Wrong With Google Maven Repository');
         });
     }
@@ -55,7 +56,7 @@ class AndroidRepositoryManager extends DependencyManager_1.DependencyManager {
             this.validateLibraryVersionArtifacts(response.data.toString(), name, message);
         })
             .catch((exception) => {
-            console.error(AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
+            ApplicationUtils_1.ApplicationUtils.printAppLog(AndroidRepositoryManager.CONSOLE_LOGGING_KEY +
                 ' Exception : ' +
                 exception);
         });

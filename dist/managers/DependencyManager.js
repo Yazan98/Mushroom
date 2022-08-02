@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DependencyManager = void 0;
 const axios_1 = require("axios");
+const ApplicationUtils_1 = require("../utils/ApplicationUtils");
 class DependencyManager {
     getRequestConfig() {
         return {
@@ -22,7 +23,7 @@ class DependencyManager {
             headers: { Accept: 'application/xml' },
         });
         instance.interceptors.request.use((request) => {
-            console.log('Google Starting Request', request.url);
+            ApplicationUtils_1.ApplicationUtils.printAppLog('Google Starting Request : ' + request.url);
             return request;
         });
         return instance;
