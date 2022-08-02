@@ -24,5 +24,7 @@ services:
       - /usr/app/node_modules
     ports:
       - "3000:3000"
+    env_file:
+      - /usr/src/app/.env
     tty: true
     command: "npm start"

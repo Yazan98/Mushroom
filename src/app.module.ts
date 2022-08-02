@@ -12,7 +12,6 @@ import { ScheduleModule } from '@nestjs/schedule';
       cache: true,
       envFilePath: '.env',
       isGlobal: true,
-      ignoreEnvFile: true,
     }),
     ScheduleModule.forRoot(),
     HttpModule,
