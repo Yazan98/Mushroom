@@ -4,14 +4,17 @@ exports.DependencyManager = void 0;
 const axios_1 = require("axios");
 const ApplicationUtils_1 = require("../utils/ApplicationUtils");
 class DependencyManager {
+    constructor(configService) {
+        this.configService = configService;
+    }
     getRequestConfig() {
         return {
             baseURL: 'https://api.github.com/',
             responseType: 'json',
             timeout: 5000,
             auth: {
-                username: process.env.GITHUB_CLIENT_NAME,
-                password: process.env.GITHUB_SECRETE,
+                username: this.configService.get('GITHUB_CLIENT_NAME'),
+                password: this.configService.get('GITHUB_SECRETE'),
             },
         };
     }

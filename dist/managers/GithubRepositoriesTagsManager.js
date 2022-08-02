@@ -5,8 +5,8 @@ const DependencyManager_1 = require("./DependencyManager");
 const CacheFileManager_1 = require("./CacheFileManager");
 const ApplicationUtils_1 = require("../utils/ApplicationUtils");
 class GithubRepositoriesTagsManager extends DependencyManager_1.DependencyManager {
-    constructor(httpService, fileName, mode, cacheFile) {
-        super();
+    constructor(httpService, configService, fileName, mode, cacheFile) {
+        super(configService);
         this.httpService = httpService;
         this.fileName = fileName;
         this.mode = mode;

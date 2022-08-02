@@ -7,8 +7,8 @@ const xml2js = require("xml2js");
 const CacheFileManager_1 = require("./CacheFileManager");
 const ApplicationUtils_1 = require("../utils/ApplicationUtils");
 class AndroidRepositoryManager extends DependencyManager_1.DependencyManager {
-    constructor(httpService) {
-        super();
+    constructor(httpService, configService) {
+        super(configService);
         this.httpService = httpService;
         this.cachedLibraries = null;
         this.cacheManager = null;

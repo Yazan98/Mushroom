@@ -6,6 +6,7 @@ import * as xml2js from 'xml2js';
 import { LibraryVersionCache } from '../models/LibraryVersionCache';
 import { CacheFileManager } from './CacheFileManager';
 import { ApplicationUtils } from '../utils/ApplicationUtils';
+import { ConfigService } from '@nestjs/config';
 
 export class AndroidRepositoryManager extends DependencyManager {
   public static ANDROID_MAVEN_PATH = '/android/maven2/';
@@ -19,8 +20,11 @@ export class AndroidRepositoryManager extends DependencyManager {
   private cachedLibraries: Array<LibraryVersionCache> = null;
   private cacheManager: CacheFileManager = null;
 
-  constructor(private readonly httpService: HttpService) {
-    super();
+  constructor(
+    private readonly httpService: HttpService,
+    configService: ConfigService,
+  ) {
+    super(configService);
     this.cacheManager = new CacheFileManager(
       AndroidRepositoryManager.GOOGLE_LIBRARIES_CACHE_FILE,
     );

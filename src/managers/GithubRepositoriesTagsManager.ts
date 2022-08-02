@@ -5,6 +5,7 @@ import { GithubRepositoryTag } from '../models/GithubRepositoryTag';
 import { LibraryVersionCache } from '../models/LibraryVersionCache';
 import { CacheFileManager } from './CacheFileManager';
 import { ApplicationUtils } from '../utils/ApplicationUtils';
+import { ConfigService } from '@nestjs/config';
 
 export class GithubRepositoriesTagsManager extends DependencyManager {
   private cachedLibraries: Array<LibraryVersionCache> = null;
@@ -12,11 +13,12 @@ export class GithubRepositoriesTagsManager extends DependencyManager {
 
   constructor(
     private readonly httpService: HttpService,
+    configService: ConfigService,
     private readonly fileName: string,
     private readonly mode: string,
     private readonly cacheFile: string,
   ) {
-    super();
+    super(configService);
     this.cacheManager = new CacheFileManager(cacheFile);
     this.cachedLibraries = this.cacheManager.onPrepareCacheFileLibraries();
   }

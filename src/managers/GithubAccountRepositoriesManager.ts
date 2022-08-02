@@ -3,10 +3,14 @@ import { Message } from 'discord.js';
 import { HttpService } from '@nestjs/axios';
 import { GithubRepository } from '../models/GithubRepository';
 import { ApplicationUtils } from '../utils/ApplicationUtils';
+import { ConfigService } from '@nestjs/config';
 
 export class GithubAccountRepositoriesManager extends DependencyManager {
-  constructor(private readonly httpService: HttpService) {
-    super();
+  constructor(
+    private readonly httpService: HttpService,
+    configService: ConfigService,
+  ) {
+    super(configService);
   }
 
   onImplementAction(event: string, message: Message) {

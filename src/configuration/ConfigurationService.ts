@@ -14,6 +14,7 @@ import * as fs from 'fs';
 import { GithubRepositoriesTagsManager } from '../managers/GithubRepositoriesTagsManager';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ChannelEvent } from '../models/ChannelEvent';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ConfigurationService
@@ -39,13 +40,16 @@ export class ConfigurationService
   private discordClient: Client = null;
   private channels: Array<ChannelModel> = null;
 
-  constructor(private readonly httpService: HttpService) {
+  constructor(
+    private readonly httpService: HttpService,
+    private configService: ConfigService,
+  ) {
     this.executeClientsListeners();
   }
 
   getCurrentSupportedServices(): Array<string> {
     ApplicationUtils.printAppLog('Supported Platforms Started !!');
-    const supportedPlatforms = process.env.SUPPORTED_SERVICES;
+    const supportedPlatforms = this.configService.get('SUPPORTED_SERVICES');
     ApplicationUtils.printAppLog('Supported Platforms : ' + supportedPlatforms);
     if (!supportedPlatforms) {
       ApplicationUtils.printAppLog('No Supported Platforms Available !!');
@@ -65,11 +69,11 @@ export class ConfigurationService
   }
 
   getDiscordApplicationToken(): string {
-    return process.env.DISCORD_BOT_TOKEN;
+    return this.configService.get('DISCORD_BOT_TOKEN');
   }
 
   getSlackApplicationToken(): string {
-    return process.env.SLACK_APPLICATION_TOKEN;
+    return this.configService.get('SLACK_APPLICATION_TOKEN');
   }
 
   getDiscordClient(): Client {
@@ -167,29 +171,30 @@ export class ConfigurationService
 
   onEventExecute(event: EventCommand, message: Message) {
     if (event.type == EventCommandType.GET_REPOS) {
-      new GithubAccountRepositoriesManager(this.httpService).onImplementAction(
-        event.target,
-        message,
-      );
+      new GithubAccountRepositoriesManager(
+        this.httpService,
+        this.configService,
+      ).onImplementAction(event.target, message);
     }
 
     if (event.type == EventCommandType.GET_ACCOUNT_INFO) {
-      new GithubAccountManager(this.httpService).onImplementAction(
-        event.target,
-        message,
-      );
+      new GithubAccountManager(
+        this.httpService,
+        this.configService,
+      ).onImplementAction(event.target, message);
     }
 
     if (event.type == EventCommandType.GET_REPO_INFO) {
-      new GithubRepositoryManager(this.httpService).onImplementAction(
-        event.target,
-        message,
-      );
+      new GithubRepositoryManager(
+        this.httpService,
+        this.configService,
+      ).onImplementAction(event.target, message);
     }
 
     if (event.type == EventCommandType.GET_BACKEND_LIBRARIES) {
       new GithubRepositoriesTagsManager(
         this.httpService,
+        this.configService,
         ConfigurationService.BACKEND_JSON_FILE,
         'Backend',
         ConfigurationService.BACKEND_CACHE_JSON_FILE,
@@ -197,13 +202,14 @@ export class ConfigurationService
     }
 
     if (event.type == EventCommandType.GET_ANDROID_LIBRARIES) {
-      new AndroidRepositoryManager(this.httpService).onImplementAction(
-        event.target,
-        message,
-      );
+      new AndroidRepositoryManager(
+        this.httpService,
+        this.configService,
+      ).onImplementAction(event.target, message);
 
       new GithubRepositoriesTagsManager(
         this.httpService,
+        this.configService,
         ConfigurationService.ANDROID_JSON_FILE,
         'Android',
         ConfigurationService.ANDROID_CACHE_JSON_FILE,
@@ -213,6 +219,7 @@ export class ConfigurationService
     if (event.type == EventCommandType.GET_GITHUB_LIBRARIES) {
       new GithubRepositoriesTagsManager(
         this.httpService,
+        this.configService,
         ConfigurationService.GENERAL_JSON_FILE,
         'General',
         ConfigurationService.GENERAL_CACHE_JSON_FILE,
