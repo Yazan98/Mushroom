@@ -6,11 +6,8 @@ import { ApplicationUtils } from '../utils/ApplicationUtils';
 import { ConfigService } from '@nestjs/config';
 
 export class GithubAccountManager extends DependencyManager {
-  constructor(
-    private readonly httpService: HttpService,
-    configService: ConfigService,
-  ) {
-    super(configService);
+  constructor(private readonly httpService: HttpService) {
+    super();
   }
 
   onImplementAction(event: string, message: Message) {

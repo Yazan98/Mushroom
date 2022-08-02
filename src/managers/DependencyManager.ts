@@ -1,11 +1,8 @@
 import { Message } from 'discord.js';
 import axios, { Axios, AxiosRequestConfig } from 'axios';
 import { ApplicationUtils } from '../utils/ApplicationUtils';
-import { ConfigService } from '@nestjs/config';
 
 export abstract class DependencyManager {
-  constructor(private readonly configService: ConfigService) {}
-
   abstract onImplementAction(event: string, message: Message);
 
   protected getRequestConfig(): AxiosRequestConfig {
@@ -14,8 +11,8 @@ export abstract class DependencyManager {
       responseType: 'json',
       timeout: 5000,
       auth: {
-        username: this.configService.get('GITHUB_CLIENT_NAME'),
-        password: this.configService.get('GITHUB_SECRETE'),
+        username: process.env.GITHUB_CLIENT_NAME,
+        password: process.env.GITHUB_SECRETE,
       },
     };
   }

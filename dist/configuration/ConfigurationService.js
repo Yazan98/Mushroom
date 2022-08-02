@@ -26,11 +26,9 @@ const fs = require("fs");
 const GithubRepositoriesTagsManager_1 = require("../managers/GithubRepositoriesTagsManager");
 const schedule_1 = require("@nestjs/schedule");
 const ChannelEvent_1 = require("../models/ChannelEvent");
-const config_1 = require("@nestjs/config");
 let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
-    constructor(httpService, configService) {
+    constructor(httpService) {
         this.httpService = httpService;
-        this.configService = configService;
         this.eventsManager = new ConfigurationEventsManager_1.ConfigurationEventsManager(this);
         this.discordClient = null;
         this.channels = null;
@@ -38,7 +36,7 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
     }
     getCurrentSupportedServices() {
         ApplicationUtils_1.ApplicationUtils.printAppLog('Supported Platforms Started !!');
-        const supportedPlatforms = this.configService.get('SUPPORTED_SERVICES');
+        const supportedPlatforms = process.env.SUPPORTED_SERVICES;
         ApplicationUtils_1.ApplicationUtils.printAppLog('Supported Platforms : ' + supportedPlatforms);
         if (!supportedPlatforms) {
             ApplicationUtils_1.ApplicationUtils.printAppLog('No Supported Platforms Available !!');
@@ -55,10 +53,10 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         return resultPlatforms;
     }
     getDiscordApplicationToken() {
-        return this.configService.get('DISCORD_BOT_TOKEN');
+        return process.env.DISCORD_BOT_TOKEN;
     }
     getSlackApplicationToken() {
-        return this.configService.get('SLACK_APPLICATION_TOKEN');
+        return process.env.SLACK_APPLICATION_TOKEN;
     }
     getDiscordClient() {
         return this.discordClient;
@@ -133,23 +131,23 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
     }
     onEventExecute(event, message) {
         if (event.type == EventCommand_1.EventCommandType.GET_REPOS) {
-            new GithubAccountRepositoriesManager_1.GithubAccountRepositoriesManager(this.httpService, this.configService).onImplementAction(event.target, message);
+            new GithubAccountRepositoriesManager_1.GithubAccountRepositoriesManager(this.httpService).onImplementAction(event.target, message);
         }
         if (event.type == EventCommand_1.EventCommandType.GET_ACCOUNT_INFO) {
-            new GithubAccountManager_1.GithubAccountManager(this.httpService, this.configService).onImplementAction(event.target, message);
+            new GithubAccountManager_1.GithubAccountManager(this.httpService).onImplementAction(event.target, message);
         }
         if (event.type == EventCommand_1.EventCommandType.GET_REPO_INFO) {
-            new GithubRepositoryManager_1.GithubRepositoryManager(this.httpService, this.configService).onImplementAction(event.target, message);
+            new GithubRepositoryManager_1.GithubRepositoryManager(this.httpService).onImplementAction(event.target, message);
         }
         if (event.type == EventCommand_1.EventCommandType.GET_BACKEND_LIBRARIES) {
-            new GithubRepositoriesTagsManager_1.GithubRepositoriesTagsManager(this.httpService, this.configService, ConfigurationService_1.BACKEND_JSON_FILE, 'Backend', ConfigurationService_1.BACKEND_CACHE_JSON_FILE).onImplementAction('', message);
+            new GithubRepositoriesTagsManager_1.GithubRepositoriesTagsManager(this.httpService, ConfigurationService_1.BACKEND_JSON_FILE, 'Backend', ConfigurationService_1.BACKEND_CACHE_JSON_FILE).onImplementAction('', message);
         }
         if (event.type == EventCommand_1.EventCommandType.GET_ANDROID_LIBRARIES) {
-            new AndroidRepositoryManager_1.AndroidRepositoryManager(this.httpService, this.configService).onImplementAction(event.target, message);
-            new GithubRepositoriesTagsManager_1.GithubRepositoriesTagsManager(this.httpService, this.configService, ConfigurationService_1.ANDROID_JSON_FILE, 'Android', ConfigurationService_1.ANDROID_CACHE_JSON_FILE).onImplementAction('', message);
+            new AndroidRepositoryManager_1.AndroidRepositoryManager(this.httpService).onImplementAction(event.target, message);
+            new GithubRepositoriesTagsManager_1.GithubRepositoriesTagsManager(this.httpService, ConfigurationService_1.ANDROID_JSON_FILE, 'Android', ConfigurationService_1.ANDROID_CACHE_JSON_FILE).onImplementAction('', message);
         }
         if (event.type == EventCommand_1.EventCommandType.GET_GITHUB_LIBRARIES) {
-            new GithubRepositoriesTagsManager_1.GithubRepositoriesTagsManager(this.httpService, this.configService, ConfigurationService_1.GENERAL_JSON_FILE, 'General', ConfigurationService_1.GENERAL_CACHE_JSON_FILE).onImplementAction('', message);
+            new GithubRepositoriesTagsManager_1.GithubRepositoriesTagsManager(this.httpService, ConfigurationService_1.GENERAL_JSON_FILE, 'General', ConfigurationService_1.GENERAL_CACHE_JSON_FILE).onImplementAction('', message);
         }
         if (event.type == EventCommand_1.EventCommandType.UNKNOWN_COMMAND) {
             message.reply(ApplicationUtils_1.ApplicationUtils.getHelpCommands());
@@ -233,8 +231,7 @@ __decorate([
 ], ConfigurationService.prototype, "handleGeneralCron", null);
 ConfigurationService = ConfigurationService_1 = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [axios_1.HttpService,
-        config_1.ConfigService])
+    __metadata("design:paramtypes", [axios_1.HttpService])
 ], ConfigurationService);
 exports.ConfigurationService = ConfigurationService;
 //# sourceMappingURL=ConfigurationService.js.map

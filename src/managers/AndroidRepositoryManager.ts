@@ -20,11 +20,8 @@ export class AndroidRepositoryManager extends DependencyManager {
   private cachedLibraries: Array<LibraryVersionCache> = null;
   private cacheManager: CacheFileManager = null;
 
-  constructor(
-    private readonly httpService: HttpService,
-    configService: ConfigService,
-  ) {
-    super(configService);
+  constructor(private readonly httpService: HttpService) {
+    super();
     this.cacheManager = new CacheFileManager(
       AndroidRepositoryManager.GOOGLE_LIBRARIES_CACHE_FILE,
     );

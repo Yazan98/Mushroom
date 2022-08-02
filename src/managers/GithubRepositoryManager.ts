@@ -4,14 +4,10 @@ import { HttpService } from '@nestjs/axios';
 import { GithubRepository } from '../models/GithubRepository';
 import { GithubAccountRepositoriesManager } from './GithubAccountRepositoriesManager';
 import { ApplicationUtils } from '../utils/ApplicationUtils';
-import { ConfigService } from '@nestjs/config';
 
 export class GithubRepositoryManager extends DependencyManager {
-  constructor(
-    private readonly httpService: HttpService,
-    configService: ConfigService,
-  ) {
-    super(configService);
+  constructor(private readonly httpService: HttpService) {
+    super();
   }
 
   onImplementAction(event: string, message: Message) {

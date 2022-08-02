@@ -5,8 +5,8 @@ const DependencyManager_1 = require("./DependencyManager");
 const GithubAccountRepositoriesManager_1 = require("./GithubAccountRepositoriesManager");
 const ApplicationUtils_1 = require("../utils/ApplicationUtils");
 class GithubRepositoryManager extends DependencyManager_1.DependencyManager {
-    constructor(httpService, configService) {
-        super(configService);
+    constructor(httpService) {
+        super();
         this.httpService = httpService;
     }
     onImplementAction(event, message) {
