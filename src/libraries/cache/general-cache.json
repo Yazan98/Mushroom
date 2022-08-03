@@ -59,6 +59,54 @@
         {
             "name": "containers/podman",
             "version": "v4.2.0-rc2"
+        },
+        {
+            "name": "Yazan98/portfolio",
+            "version": "3.0.2"
+        },
+        {
+            "name": "Yazan98/Vanite",
+            "version": "2.3.1"
+        },
+        {
+            "name": "nestjs/nest",
+            "version": "v9.0.7"
+        },
+        {
+            "name": "Yazan98/Markdown-Compose",
+            "version": "1.0.2"
+        },
+        {
+            "name": "containers/podman",
+            "version": "v4.2.0-rc2"
+        },
+        {
+            "name": "containers/podman",
+            "version": "v4.2.0-rc2"
+        },
+        {
+            "name": "Yazan98/Markdown-Compose",
+            "version": "1.0.2"
+        },
+        {
+            "name": "nestjs/nest",
+            "version": "v9.0.7"
+        },
+        {
+            "name": "Yazan98/Vanite",
+            "version": "2.3.1"
+        },
+        {
+            "name": "Yazan98/portfolio",
+            "version": "3.0.2"
+        },
+        {
+            "name": "Yazan98/portfolio",
+            "version": "3.0.2"
+        },
+        {
+            "name": "Yazan98/Vanite",
+            "version": "2.3.1"
         }
     ]
 }

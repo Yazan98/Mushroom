@@ -11,6 +11,170 @@
         {
             "name": "Yazan98/Markdown-Compose",
             "version": "1.0.2"
+        },
+        {
+            "name": "Yazan98/Palex-Adapter",
+            "version": "1.0.1"
+        },
+        {
+            "name": "hi-manshu/Kalendar",
+            "version": "v1.0.0-RC4_v1.0.0-RC1"
+        },
+        {
+            "name": "kasem-sm/SlimeKT",
+            "version": "v2.3"
+        },
+        {
+            "name": "tanujnotes/Olauncher",
+            "version": "v3.5.3"
+        },
+        {
+            "name": "square/papa",
+            "version": "v0.5"
+        },
+        {
+            "name": "Yazan98/Issuer-kt",
+            "version": "1.0.1"
+        },
+        {
+            "name": "Yazan98/Shake-Reporter-Kt",
+            "version": "1.1.0"
+        },
+        {
+            "name": "JakeWharton/dependency-watch",
+            "version": "0.4.1"
+        },
+        {
+            "name": "termux/termux-app",
+            "version": "v0.118.0"
+        },
+        {
+            "name": "reddit/IndicatorFastScroll",
+            "version": "1.4.0"
+        },
+        {
+            "name": "vipulasri/Timeline-View",
+            "version": "v1.1.5"
+        },
+        {
+            "name": "Tapadoo/Alerter",
+            "version": "7.2.4"
+        },
+        {
+            "name": "ZacSweers/MoshiX",
+            "version": "0.18.3"
+        },
+        {
+            "name": "vector-im/element-android",
+            "version": "v1.4.31"
+        },
+        {
+            "name": "android/android-studio-poet",
+            "version": "3.2"
+        },
+        {
+            "name": "kotest/kotest",
+            "version": "v5.4.1"
+        },
+        {
+            "name": "JakeWharton/mosaic",
+            "version": "0.1.0"
+        },
+        {
+            "name": "JakeWharton/adb-event-mirror",
+            "version": "1.0.0"
+        },
+        {
+            "name": "square/moshi",
+            "version": "moshi-parent-1.13.0"
+        },
+        {
+            "name": "sduduzog/slim-launcher",
+            "version": "v2.4.21"
+        },
+        {
+            "name": "islem19/AOSP-Pure-Launcher",
+            "version": "V1.0.0"
+        },
+        {
+            "name": "android/compose-samples",
+            "version": "v1.2.0-rc03"
+        },
+        {
+            "name": "timusus/Shuttle",
+            "version": "v2.0.17-release"
+        },
+        {
+            "name": "JakeWharton/dependency-tree-diff",
+            "version": "1.2.0"
+        },
+        {
+            "name": "JakeWharton/ui-spy",
+            "version": "0.2.0"
+        },
+        {
+            "name": "JakeWharton/SdkSearch",
+            "version": "1.4.1.0"
+        },
+        {
+            "name": "danger/kotlin",
+            "version": "sdk_1.2"
+        },
+        {
+            "name": "fennifith/Status",
+            "version": "v3.8-beta6"
+        },
+        {
+            "name": "finnmglas/Launcher",
+            "version": "v1.6.0"
+        },
+        {
+            "name": "JakeWharton/picnic",
+            "version": "0.6.0"
+        },
+        {
+            "name": "amdev01/FloatingVolume",
+            "version": "1.2.1"
+        },
+        {
+            "name": "JakeWharton/crossword",
+            "version": "0.2.0"
+        },
+        {
+            "name": "JetBrains/compose-jb",
+            "version": "v1.2.0-alpha01-dev753"
+        },
+        {
+            "name": "JakeWharton/dodo",
+            "version": "1.1.0"
+        },
+        {
+            "name": "futuredapp/arkitekt",
+            "version": "5.2.0"
+        },
+        {
+            "name": "JakeWharton/okhttp-idling-resource",
+            "version": "1.0.0"
+        },
+        {
+            "name": "JakeWharton/timber",
+            "version": "timber-parent-3.1.0"
+        },
+        {
+            "name": "google/flexbox-layout",
+            "version": "3.0.0"
+        },
+        {
+            "name": "saket/InboxRecyclerView",
+            "version": "v3.0"
+        },
+        {
+            "name": "JakeWharton/RxBinding",
+            "version": "4.0.0"
+        },
+        {
+            "name": "jwstegemann/fritz2",
+            "version": "v1.0-RC1"
         }
     ]
 }

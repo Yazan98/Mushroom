@@ -89,6 +89,10 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
                 ApplicationUtils_1.ApplicationUtils.printAppLog('Ignoring bot message!');
                 return;
             }
+            if (message.content.includes('403') || message.content.includes('401')) {
+                ApplicationUtils_1.ApplicationUtils.printAppLog('Ignoring bot message : Github Limit Exceed!');
+                return;
+            }
             if (this.channels == null) {
                 this.getChannelsInformation();
             }
@@ -213,19 +217,19 @@ ConfigurationService.GENERAL_JSON_FILE = process.cwd() + '/app/src/libraries/gen
 ConfigurationService.GENERAL_CACHE_JSON_FILE = process.cwd() + '/app/src/libraries/cache/general-cache.json';
 ConfigurationService.CHANNELS_JSON_FILE = process.cwd() + '/app/src/libraries/channels.json';
 __decorate([
-    (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_MINUTE),
+    (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_DAY_AT_1AM),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], ConfigurationService.prototype, "handleBackendCron", null);
 __decorate([
-    (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_MINUTE),
+    (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_DAY_AT_1AM),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], ConfigurationService.prototype, "handleAndroidCron", null);
 __decorate([
-    (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_MINUTE),
+    (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_DAY_AT_1AM),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)

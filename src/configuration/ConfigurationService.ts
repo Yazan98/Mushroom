@@ -293,7 +293,7 @@ export class ConfigurationService
     }
   }
 
-  @Cron(CronExpression.EVERY_12_HOURS)
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
   handleBackendCron() {
     ApplicationUtils.printAppLog('Backend Cron Job Started');
     this.onSendDiscordMessageEventTrigger(
@@ -302,7 +302,7 @@ export class ConfigurationService
     );
   }
 
-  @Cron(CronExpression.EVERY_12_HOURS)
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
   handleAndroidCron() {
     ApplicationUtils.printAppLog('Android Cron Job Started');
     this.onSendDiscordMessageEventTrigger(
@@ -311,7 +311,7 @@ export class ConfigurationService
     );
   }
 
-  @Cron(CronExpression.EVERY_12_HOURS)
+  @Cron(CronExpression.EVERY_DAY_AT_1AM)
   handleGeneralCron() {
     ApplicationUtils.printAppLog('General Cron Job Started');
     this.onSendDiscordMessageEventTrigger(
