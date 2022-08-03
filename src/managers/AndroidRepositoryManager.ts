@@ -14,9 +14,9 @@ export class AndroidRepositoryManager extends DependencyManager {
   private static CONSOLE_LOGGING_KEY = '[Google Dependencies]';
   public static GROUP_ARTIFACTS = '/group-index.xml';
   private static GOOGLE_LIBRARIES_FILE =
-    process.cwd() + '/src/libraries/google-libraries.json';
+    process.cwd() + '/app/src/libraries/google-libraries.json';
   private static GOOGLE_LIBRARIES_CACHE_FILE =
-    process.cwd() + '/src/libraries/cache/google-cache.json';
+    process.cwd() + '/app/src/libraries/cache/google-cache.json';
   private cachedLibraries: Array<LibraryVersionCache> = null;
   private cacheManager: CacheFileManager = null;
 

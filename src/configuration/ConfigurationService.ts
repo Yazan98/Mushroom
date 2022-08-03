@@ -21,19 +21,19 @@ export class ConfigurationService
   implements ConfigurationServiceImplementation
 {
   public static ANDROID_JSON_FILE =
-    process.cwd() + '/src/libraries/android.json';
+    process.cwd() + '/app/src/libraries/android.json';
   public static ANDROID_CACHE_JSON_FILE =
-    process.cwd() + '/src/libraries/cache/android-cache.json';
+    process.cwd() + '/app/src/libraries/cache/android-cache.json';
   public static BACKEND_JSON_FILE =
-    process.cwd() + '/src/libraries/backend.json';
+    process.cwd() + '/app/src/libraries/backend.json';
   public static BACKEND_CACHE_JSON_FILE =
-    process.cwd() + '/src/libraries/cache/backend-cache.json';
+    process.cwd() + '/app/src/libraries/cache/backend-cache.json';
   public static GENERAL_JSON_FILE =
-    process.cwd() + '/src/libraries/general.json';
+    process.cwd() + '/app/src/libraries/general.json';
   public static GENERAL_CACHE_JSON_FILE =
-    process.cwd() + '/src/libraries/cache/general-cache.json';
+    process.cwd() + '/app/src/libraries/cache/general-cache.json';
   public static CHANNELS_JSON_FILE =
-    process.cwd() + '/src/libraries/channels.json';
+    process.cwd() + '/app/src/libraries/channels.json';
 
   private eventsManager: ConfigurationEventsManager =
     new ConfigurationEventsManager(this);

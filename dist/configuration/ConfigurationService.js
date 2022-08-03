@@ -205,13 +205,13 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         return this.channels;
     }
 };
-ConfigurationService.ANDROID_JSON_FILE = process.cwd() + '/src/libraries/android.json';
-ConfigurationService.ANDROID_CACHE_JSON_FILE = process.cwd() + '/src/libraries/cache/android-cache.json';
-ConfigurationService.BACKEND_JSON_FILE = process.cwd() + '/src/libraries/backend.json';
-ConfigurationService.BACKEND_CACHE_JSON_FILE = process.cwd() + '/src/libraries/cache/backend-cache.json';
-ConfigurationService.GENERAL_JSON_FILE = process.cwd() + '/src/libraries/general.json';
-ConfigurationService.GENERAL_CACHE_JSON_FILE = process.cwd() + '/src/libraries/cache/general-cache.json';
-ConfigurationService.CHANNELS_JSON_FILE = process.cwd() + '/src/libraries/channels.json';
+ConfigurationService.ANDROID_JSON_FILE = process.cwd() + '/app/src/libraries/android.json';
+ConfigurationService.ANDROID_CACHE_JSON_FILE = process.cwd() + '/app/src/libraries/cache/android-cache.json';
+ConfigurationService.BACKEND_JSON_FILE = process.cwd() + '/app/src/libraries/backend.json';
+ConfigurationService.BACKEND_CACHE_JSON_FILE = process.cwd() + '/app/src/libraries/cache/backend-cache.json';
+ConfigurationService.GENERAL_JSON_FILE = process.cwd() + '/app/src/libraries/general.json';
+ConfigurationService.GENERAL_CACHE_JSON_FILE = process.cwd() + '/app/src/libraries/cache/general-cache.json';
+ConfigurationService.CHANNELS_JSON_FILE = process.cwd() + '/app/src/libraries/channels.json';
 __decorate([
     (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_MINUTE),
     __metadata("design:type", Function),
