@@ -39,9 +39,6 @@ ADD src app/src
 COPY src/libraries .
 COPY src/libraries app/dist/libraries
 COPY src/libraries app/libraries
-COPY .env app/dist
-COPY .env app/app/src
-COPY .env app/src
 
 # Install dependencies
 RUN npm install

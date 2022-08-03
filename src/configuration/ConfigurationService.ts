@@ -14,6 +14,7 @@ import * as fs from 'fs';
 import { GithubRepositoriesTagsManager } from '../managers/GithubRepositoriesTagsManager';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ChannelEvent } from '../models/ChannelEvent';
+import { ApplicationKeysManager } from '../utils/ApplicationKeysManager';
 
 @Injectable()
 export class ConfigurationService
@@ -45,7 +46,7 @@ export class ConfigurationService
 
   getCurrentSupportedServices(): Array<string> {
     ApplicationUtils.printAppLog('Supported Platforms Started !!');
-    const supportedPlatforms = process.env.SUPPORTED_SERVICES;
+    const supportedPlatforms = ApplicationKeysManager.getSupportedPlatforms();
     ApplicationUtils.printAppLog('Supported Platforms : ' + supportedPlatforms);
 
     if (!supportedPlatforms) {
@@ -66,7 +67,7 @@ export class ConfigurationService
   }
 
   getDiscordApplicationToken(): string {
-    return process.env.DISCORD_BOT_TOKEN;
+    return ApplicationKeysManager.getDiscordToken();
   }
 
   getSlackApplicationToken(): string {

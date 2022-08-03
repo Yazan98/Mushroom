@@ -26,6 +26,7 @@ const fs = require("fs");
 const GithubRepositoriesTagsManager_1 = require("../managers/GithubRepositoriesTagsManager");
 const schedule_1 = require("@nestjs/schedule");
 const ChannelEvent_1 = require("../models/ChannelEvent");
+const ApplicationKeysManager_1 = require("../utils/ApplicationKeysManager");
 let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
     constructor(httpService) {
         this.httpService = httpService;
@@ -36,7 +37,7 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
     }
     getCurrentSupportedServices() {
         ApplicationUtils_1.ApplicationUtils.printAppLog('Supported Platforms Started !!');
-        const supportedPlatforms = process.env.SUPPORTED_SERVICES;
+        const supportedPlatforms = ApplicationKeysManager_1.ApplicationKeysManager.getSupportedPlatforms();
         ApplicationUtils_1.ApplicationUtils.printAppLog('Supported Platforms : ' + supportedPlatforms);
         if (!supportedPlatforms) {
             ApplicationUtils_1.ApplicationUtils.printAppLog('No Supported Platforms Available !!');
@@ -53,7 +54,7 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         return resultPlatforms;
     }
     getDiscordApplicationToken() {
-        return process.env.DISCORD_BOT_TOKEN;
+        return ApplicationKeysManager_1.ApplicationKeysManager.getDiscordToken();
     }
     getSlackApplicationToken() {
         return process.env.SLACK_APPLICATION_TOKEN;
