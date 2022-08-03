@@ -40,7 +40,6 @@ COPY src/libraries .
 COPY src/libraries app/dist/libraries
 COPY src/libraries app/libraries
 COPY src/libraries app/src/libraries
-COPY src/libraries app/app/src/libraries
 
 # Install dependencies
 RUN npm install
