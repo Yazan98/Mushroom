@@ -107,6 +107,13 @@ export class ConfigurationService
         return;
       }
 
+      if (message.content.includes('403') || message.content.includes('401')) {
+        ApplicationUtils.printAppLog(
+          'Ignoring bot message : Github Limit Exceed!',
+        );
+        return;
+      }
+
       if (this.channels == null) {
         this.getChannelsInformation();
       }
@@ -286,7 +293,7 @@ export class ConfigurationService
     }
   }
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_12_HOURS)
   handleBackendCron() {
     ApplicationUtils.printAppLog('Backend Cron Job Started');
     this.onSendDiscordMessageEventTrigger(
@@ -295,7 +302,7 @@ export class ConfigurationService
     );
   }
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_12_HOURS)
   handleAndroidCron() {
     ApplicationUtils.printAppLog('Android Cron Job Started');
     this.onSendDiscordMessageEventTrigger(
@@ -304,7 +311,7 @@ export class ConfigurationService
     );
   }
 
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_12_HOURS)
   handleGeneralCron() {
     ApplicationUtils.printAppLog('General Cron Job Started');
     this.onSendDiscordMessageEventTrigger(
