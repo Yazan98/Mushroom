@@ -11,13 +11,7 @@ services:
     working_dir: /usr/src/app
     environment:
       - NODE_ENV=production
-      - SUPPORTED_SERVICES=slack,discord
-      - DISCORD_BOT_TOKEN=test
-      - DISCORD_APP_ID=test
-      - GITHUB_CLIENT_NAME=test
-      - GITHUB_SECRETE=test
-      - SLACK_APPLICATION_NAME=test
-      - SLACK_APPLICATION_TOKEN=test
+      - SUPPORTED_SERVICES=discord
       - VERSION=1.0
     volumes:
       - .:/usr/src/app

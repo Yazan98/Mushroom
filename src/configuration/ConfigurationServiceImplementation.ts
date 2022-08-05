@@ -2,8 +2,6 @@ import { Client, Message } from 'discord.js';
 import { EventCommand } from '../models/EventCommand';
 
 export interface ConfigurationServiceImplementation {
-  getSlackApplicationToken(): string;
-
   getDiscordApplicationToken(): string;
 
   getCurrentSupportedServices(): Array<string>;
@@ -19,8 +17,6 @@ export interface ConfigurationServiceImplementation {
   executeDiscordListener();
 
   onEventExecute(event: EventCommand, message: Message);
-
-  executeSlackListener();
 
   generateJsonTemplates();
 }

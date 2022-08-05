@@ -19,15 +19,14 @@ export declare class ConfigurationService implements ConfigurationServiceImpleme
     constructor(httpService: HttpService);
     getCurrentSupportedServices(): Array<string>;
     getDiscordApplicationToken(): string;
-    getSlackApplicationToken(): string;
     getDiscordClient(): Client;
     executeClientsListeners(): void;
     executeDiscordListener(): void;
     getChannelsInformation(): void;
     getChannelNameById(id: string): string;
     onEventExecute(event: EventCommand, message: Message): void;
-    executeSlackListener(): void;
     generateJsonTemplates(): void;
+    onSendDiscordConnectedMessage(): void;
     onSendDiscordMessageEventTrigger(message: string, type: ChannelEvent): void;
     handleBackendCron(): void;
     handleAndroidCron(): void;

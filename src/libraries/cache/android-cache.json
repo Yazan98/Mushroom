@@ -175,6 +175,70 @@
         {
             "name": "jwstegemann/fritz2",
             "version": "v1.0-RC1"
+        },
+        {
+            "name": "futuredapp/hauler",
+            "version": "v1.1.0"
+        },
+        {
+            "name": "gradle/gradle",
+            "version": "v7.5.0"
+        },
+        {
+            "name": "oppia/oppia-android",
+            "version": "v0.7"
+        },
+        {
+            "name": "JakeWharton/diffuse",
+            "version": "dex-method-list-3.1.0"
+        },
+        {
+            "name": "JakeWharton/RxRelay",
+            "version": "rxrelay-3.0.1"
+        },
+        {
+            "name": "Kotlin/kotlinx.coroutines",
+            "version": "1.6.4"
+        },
+        {
+            "name": "corona-warn-app/cwa-app-android",
+            "version": "vTest-deeplink"
+        },
+        {
+            "name": "JakeWharton/dagger-reflect",
+            "version": "0.3.0"
+        },
+        {
+            "name": "hi-manshu/Kalendar",
+            "version": "v1.0_1.0.0-RC6"
+        },
+        {
+            "name": "JetBrains/gradle-intellij-plugin",
+            "version": "v1.8.0"
+        },
+        {
+            "name": "Kotlin/kotlinx-benchmark",
+            "version": "v0.4.4"
+        },
+        {
+            "name": "Kotlin/kotlinx.serialization",
+            "version": "v1.4.0-RC"
+        },
+        {
+            "name": "GetStream/stream-chat-android",
+            "version": "v5.7.0"
+        },
+        {
+            "name": "mozilla-mobile/fenix",
+            "version": "v104.0b4"
+        },
+        {
+            "name": "RetroMusicPlayer/RetroMusicPlayer",
+            "version": "v6.0.2"
+        },
+        {
+            "name": "JetBrains/kotlin",
+            "version": "v1.7.20-Beta"
         }
     ]
 }

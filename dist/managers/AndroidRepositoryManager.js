@@ -6,6 +6,7 @@ const fs = require("fs");
 const xml2js = require("xml2js");
 const CacheFileManager_1 = require("./CacheFileManager");
 const ApplicationUtils_1 = require("../utils/ApplicationUtils");
+const ApplicationKeysManager_1 = require("../utils/ApplicationKeysManager");
 class AndroidRepositoryManager extends DependencyManager_1.DependencyManager {
     constructor(httpService) {
         super();
@@ -111,6 +112,16 @@ class AndroidRepositoryManager extends DependencyManager_1.DependencyManager {
             'Library Link : ' +
                 `https://maven.google.com/web/index.html#${name}:${artifact}:${version}` +
                 '\n';
+        if (name.includes(DependencyManager_1.DependencyManager.FIREBASE_KEY)) {
+            response +=
+                ' 3. Documentation : ' +
+                    DependencyManager_1.DependencyManager.getFirebaseDocumentationUrl(artifact) +
+                    '\n';
+            response +=
+                ' 4. Release Notes : ' +
+                    DependencyManager_1.DependencyManager.RELEASE_NOTES_FIREBASE +
+                    '\n';
+        }
         return response;
     }
 }
@@ -119,6 +130,10 @@ AndroidRepositoryManager.ANDROID_MAVEN_PATH = '/android/maven2/';
 AndroidRepositoryManager.ANDROID_ALL_LIBRARIES = 'master-index.xml';
 AndroidRepositoryManager.CONSOLE_LOGGING_KEY = '[Google Dependencies]';
 AndroidRepositoryManager.GROUP_ARTIFACTS = '/group-index.xml';
-AndroidRepositoryManager.GOOGLE_LIBRARIES_FILE = process.cwd() + '/app/src/libraries/google-libraries.json';
-AndroidRepositoryManager.GOOGLE_LIBRARIES_CACHE_FILE = process.cwd() + '/app/src/libraries/cache/google-cache.json';
+AndroidRepositoryManager.GOOGLE_LIBRARIES_FILE = process.cwd() +
+    ApplicationKeysManager_1.ApplicationKeysManager.getFilePath() +
+    'libraries/google-libraries.json';
+AndroidRepositoryManager.GOOGLE_LIBRARIES_CACHE_FILE = process.cwd() +
+    ApplicationKeysManager_1.ApplicationKeysManager.getFilePath() +
+    'libraries/cache/google-cache.json';
 //# sourceMappingURL=AndroidRepositoryManager.js.map

@@ -56,9 +56,6 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
     getDiscordApplicationToken() {
         return ApplicationKeysManager_1.ApplicationKeysManager.getDiscordToken();
     }
-    getSlackApplicationToken() {
-        return process.env.SLACK_APPLICATION_TOKEN;
-    }
     getDiscordClient() {
         return this.discordClient;
     }
@@ -67,10 +64,7 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         ApplicationUtils_1.ApplicationUtils.printAppLog('Clients Start ...');
         for (let i = 0; i < supportedServices.length; i++) {
             ApplicationUtils_1.ApplicationUtils.printAppLog('Init Client : ' + supportedServices[i]);
-            if (supportedServices[i] === 'slack') {
-                this.executeSlackListener();
-            }
-            else {
+            if (supportedServices[i] === 'discord') {
                 this.executeDiscordListener();
             }
         }
@@ -106,6 +100,7 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
                 this.getChannelsInformation();
             }
             ApplicationUtils_1.ApplicationUtils.printAppLog('Discord Client Connected !!');
+            this.onSendDiscordConnectedMessage();
         })
             .catch((ex) => {
             ApplicationUtils_1.ApplicationUtils.printAppLog('Discord Client Error : ' + ex.message);
@@ -158,8 +153,6 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
             message.reply(ApplicationUtils_1.ApplicationUtils.getHelpCommands());
         }
     }
-    executeSlackListener() {
-    }
     generateJsonTemplates() {
         if (fs.existsSync(ConfigurationService_1.ANDROID_JSON_FILE)) {
             ApplicationUtils_1.ApplicationUtils.printAppLog(`${ConfigurationService_1.ANDROID_JSON_FILE} Already Exists ..`);
@@ -169,6 +162,19 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         }
         if (fs.existsSync(ConfigurationService_1.GENERAL_JSON_FILE)) {
             ApplicationUtils_1.ApplicationUtils.printAppLog(`${ConfigurationService_1.GENERAL_JSON_FILE} Already Exists ..`);
+        }
+    }
+    onSendDiscordConnectedMessage() {
+        let targetSenderChannel = '';
+        if (this.channels != null) {
+            for (let i = 0; i < this.channels.length; i++) {
+                if (this.channels[i].name === 'General') {
+                    targetSenderChannel = this.channels[i].id;
+                }
+            }
+        }
+        if (this.discordClient != null) {
+            this.discordClient.channels.cache.get(targetSenderChannel).send('Hi, Mushroom Bot Connected and Started !!');
         }
     }
     onSendDiscordMessageEventTrigger(message, type) {
@@ -209,13 +215,27 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         return this.channels;
     }
 };
-ConfigurationService.ANDROID_JSON_FILE = process.cwd() + '/app/src/libraries/android.json';
-ConfigurationService.ANDROID_CACHE_JSON_FILE = process.cwd() + '/app/src/libraries/cache/android-cache.json';
-ConfigurationService.BACKEND_JSON_FILE = process.cwd() + '/app/src/libraries/backend.json';
-ConfigurationService.BACKEND_CACHE_JSON_FILE = process.cwd() + '/app/src/libraries/cache/backend-cache.json';
-ConfigurationService.GENERAL_JSON_FILE = process.cwd() + '/app/src/libraries/general.json';
-ConfigurationService.GENERAL_CACHE_JSON_FILE = process.cwd() + '/app/src/libraries/cache/general-cache.json';
-ConfigurationService.CHANNELS_JSON_FILE = process.cwd() + '/app/src/libraries/channels.json';
+ConfigurationService.ANDROID_JSON_FILE = process.cwd() +
+    ApplicationKeysManager_1.ApplicationKeysManager.getFilePath() +
+    'libraries/android.json';
+ConfigurationService.ANDROID_CACHE_JSON_FILE = process.cwd() +
+    ApplicationKeysManager_1.ApplicationKeysManager.getFilePath() +
+    'libraries/cache/android-cache.json';
+ConfigurationService.BACKEND_JSON_FILE = process.cwd() +
+    ApplicationKeysManager_1.ApplicationKeysManager.getFilePath() +
+    'libraries/backend.json';
+ConfigurationService.BACKEND_CACHE_JSON_FILE = process.cwd() +
+    ApplicationKeysManager_1.ApplicationKeysManager.getFilePath() +
+    'libraries/cache/backend-cache.json';
+ConfigurationService.GENERAL_JSON_FILE = process.cwd() +
+    ApplicationKeysManager_1.ApplicationKeysManager.getFilePath() +
+    'libraries/general.json';
+ConfigurationService.GENERAL_CACHE_JSON_FILE = process.cwd() +
+    ApplicationKeysManager_1.ApplicationKeysManager.getFilePath() +
+    'libraries/cache/general-cache.json';
+ConfigurationService.CHANNELS_JSON_FILE = process.cwd() +
+    ApplicationKeysManager_1.ApplicationKeysManager.getFilePath() +
+    'libraries/channels.json';
 __decorate([
     (0, schedule_1.Cron)(schedule_1.CronExpression.EVERY_DAY_AT_1AM),
     __metadata("design:type", Function),

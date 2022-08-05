@@ -21,19 +21,33 @@ export class ConfigurationService
   implements ConfigurationServiceImplementation
 {
   public static ANDROID_JSON_FILE =
-    process.cwd() + '/app/src/libraries/android.json';
+    process.cwd() +
+    ApplicationKeysManager.getFilePath() +
+    'libraries/android.json';
   public static ANDROID_CACHE_JSON_FILE =
-    process.cwd() + '/app/src/libraries/cache/android-cache.json';
+    process.cwd() +
+    ApplicationKeysManager.getFilePath() +
+    'libraries/cache/android-cache.json';
   public static BACKEND_JSON_FILE =
-    process.cwd() + '/app/src/libraries/backend.json';
+    process.cwd() +
+    ApplicationKeysManager.getFilePath() +
+    'libraries/backend.json';
   public static BACKEND_CACHE_JSON_FILE =
-    process.cwd() + '/app/src/libraries/cache/backend-cache.json';
+    process.cwd() +
+    ApplicationKeysManager.getFilePath() +
+    'libraries/cache/backend-cache.json';
   public static GENERAL_JSON_FILE =
-    process.cwd() + '/app/src/libraries/general.json';
+    process.cwd() +
+    ApplicationKeysManager.getFilePath() +
+    'libraries/general.json';
   public static GENERAL_CACHE_JSON_FILE =
-    process.cwd() + '/app/src/libraries/cache/general-cache.json';
+    process.cwd() +
+    ApplicationKeysManager.getFilePath() +
+    'libraries/cache/general-cache.json';
   public static CHANNELS_JSON_FILE =
-    process.cwd() + '/app/src/libraries/channels.json';
+    process.cwd() +
+    ApplicationKeysManager.getFilePath() +
+    'libraries/channels.json';
 
   private eventsManager: ConfigurationEventsManager =
     new ConfigurationEventsManager(this);
@@ -70,10 +84,6 @@ export class ConfigurationService
     return ApplicationKeysManager.getDiscordToken();
   }
 
-  getSlackApplicationToken(): string {
-    return process.env.SLACK_APPLICATION_TOKEN;
-  }
-
   getDiscordClient(): Client {
     return this.discordClient;
   }
@@ -83,9 +93,7 @@ export class ConfigurationService
     ApplicationUtils.printAppLog('Clients Start ...');
     for (let i = 0; i < supportedServices.length; i++) {
       ApplicationUtils.printAppLog('Init Client : ' + supportedServices[i]);
-      if (supportedServices[i] === 'slack') {
-        this.executeSlackListener();
-      } else {
+      if (supportedServices[i] === 'discord') {
         this.executeDiscordListener();
       }
     }
@@ -135,6 +143,7 @@ export class ConfigurationService
           this.getChannelsInformation();
         }
         ApplicationUtils.printAppLog('Discord Client Connected !!');
+        this.onSendDiscordConnectedMessage();
       })
       .catch((ex) => {
         ApplicationUtils.printAppLog('Discord Client Error : ' + ex.message);
@@ -233,10 +242,6 @@ export class ConfigurationService
     }
   }
 
-  executeSlackListener() {
-    // Add Slack Instance Here
-  }
-
   generateJsonTemplates() {
     if (fs.existsSync(ConfigurationService.ANDROID_JSON_FILE)) {
       ApplicationUtils.printAppLog(
@@ -254,6 +259,25 @@ export class ConfigurationService
       ApplicationUtils.printAppLog(
         `${ConfigurationService.GENERAL_JSON_FILE} Already Exists ..`,
       );
+    }
+  }
+
+  onSendDiscordConnectedMessage() {
+    let targetSenderChannel = '';
+    if (this.channels != null) {
+      for (let i = 0; i < this.channels.length; i++) {
+        if (this.channels[i].name === 'General') {
+          targetSenderChannel = this.channels[i].id;
+        }
+      }
+    }
+
+    if (this.discordClient != null) {
+      (
+        this.discordClient.channels.cache.get(
+          targetSenderChannel,
+        ) as TextChannel
+      ).send('Hi, Mushroom Bot Connected and Started !!');
     }
   }
 

@@ -6,10 +6,22 @@ class ApplicationKeysManager {
         return 'MTAwMTgwMzA4NDk1NzIyMDk3NQ.GlPZZv.dPsZJ8D8446tiHFA-U__nmPIYTUUtkbbv7Oc98';
     }
     static getSupportedPlatforms() {
-        return 'slack,discord';
+        return 'discord';
     }
-    static getAppClientId() {
-        return '1001803084957220975';
+    static getGithubUsername() {
+        return 'Yazan98';
+    }
+    static getGithubToken() {
+        return '';
+    }
+    static getFilePath() {
+        const isLocalEnv = process.env.IS_LOCAL_DEV;
+        if (!isLocalEnv) {
+            return '/src/';
+        }
+        else {
+            return '/app/src/';
+        }
     }
 }
 exports.ApplicationKeysManager = ApplicationKeysManager;

@@ -6,7 +6,7 @@ import * as xml2js from 'xml2js';
 import { LibraryVersionCache } from '../models/LibraryVersionCache';
 import { CacheFileManager } from './CacheFileManager';
 import { ApplicationUtils } from '../utils/ApplicationUtils';
-import { ConfigService } from '@nestjs/config';
+import { ApplicationKeysManager } from '../utils/ApplicationKeysManager';
 
 export class AndroidRepositoryManager extends DependencyManager {
   public static ANDROID_MAVEN_PATH = '/android/maven2/';
@@ -14,9 +14,13 @@ export class AndroidRepositoryManager extends DependencyManager {
   private static CONSOLE_LOGGING_KEY = '[Google Dependencies]';
   public static GROUP_ARTIFACTS = '/group-index.xml';
   private static GOOGLE_LIBRARIES_FILE =
-    process.cwd() + '/app/src/libraries/google-libraries.json';
+    process.cwd() +
+    ApplicationKeysManager.getFilePath() +
+    'libraries/google-libraries.json';
   private static GOOGLE_LIBRARIES_CACHE_FILE =
-    process.cwd() + '/app/src/libraries/cache/google-cache.json';
+    process.cwd() +
+    ApplicationKeysManager.getFilePath() +
+    'libraries/cache/google-cache.json';
   private cachedLibraries: Array<LibraryVersionCache> = null;
   private cacheManager: CacheFileManager = null;
 
@@ -171,6 +175,18 @@ export class AndroidRepositoryManager extends DependencyManager {
       'Library Link : ' +
       `https://maven.google.com/web/index.html#${name}:${artifact}:${version}` +
       '\n';
+
+    if (name.includes(DependencyManager.FIREBASE_KEY)) {
+      response +=
+        ' 3. Documentation : ' +
+        DependencyManager.getFirebaseDocumentationUrl(artifact) +
+        '\n';
+      response +=
+        ' 4. Release Notes : ' +
+        DependencyManager.RELEASE_NOTES_FIREBASE +
+        '\n';
+    }
+
     return response;
   }
 }

@@ -4,10 +4,23 @@ export class ApplicationKeysManager {
   }
 
   static getSupportedPlatforms(): string {
-    return 'slack,discord';
+    return 'discord';
   }
 
-  static getAppClientId(): string {
-    return '1001803084957220975';
+  static getGithubUsername(): string {
+    return 'Yazan98';
+  }
+
+  static getGithubToken(): string {
+    return '';
+  }
+
+  static getFilePath(): string {
+    const isLocalEnv = process.env.IS_LOCAL_DEV;
+    if (!isLocalEnv) {
+      return '/src/';
+    } else {
+      return '/app/src/';
+    }
   }
 }
