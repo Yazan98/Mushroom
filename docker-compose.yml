@@ -18,6 +18,7 @@ services:
       - /usr/app/node_modules
     ports:
       - "3000:3000"
+      - "0.0.0.0:3000:3000"
     env_file:
       - .env
     tty: true

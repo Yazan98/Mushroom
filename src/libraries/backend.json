@@ -1,23 +1,295 @@
 {
   "libraries": [
     {
-      "name": "Yazan98/Vanite",
+      "name": "containers/skopeo",
       "version": "1.0.0"
     },
     {
-      "name": "Yazan98/portfolio",
+      "name": "containers/crun",
       "version": "1.0.0"
     },
     {
-      "name": "Yazan98/Markdown-Compose",
+      "name": "containers/buildah",
       "version": "1.0.0"
     },
     {
-      "name": "nestjs/nest",
+      "name": "gruntjs/grunt",
       "version": "v9.0.1"
     },
     {
-      "name": "containers/podman",
+      "name": "prometheus/prometheus",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "ziglang/zig",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "prisma/prisma",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "fastify/fastify",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "oven-sh/bun",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "thereum/solidity",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "bazelbuild/bazel",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "elastic/eui",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "redis/redis",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "chakra-ui/chakra-ui",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "grafana/grafana",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "gofiber/fiber",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "jhipster/generator-jhipster",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "socketio/socket.io",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "dailydotdev/daily-api",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "carbon-app/carbon",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "electron/electron",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "ethereum/ethereum-org-website",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "yarnpkg/berry",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "akd-io/create-next-stack",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "shuding/nextra",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "GetStream/stream-chat-react",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "opensearch-project/OpenSearch",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "cypress-io/cypress",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "ArkScript-lang/Ark",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "ChaiScript/ChaiScript",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "JuliaLang/julia",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "nim-lang/Nim",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "bleenco/abstruse",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "concourse/concourse",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "frintjs/frint",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "tangbc/sugar",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "emberjs/ember.js",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "aurelia/cli",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "aurelia/framework",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "tailwindlabs/tailwindcss",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "vercel/vercel",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "zyedidia/micro",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "golang/go",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "jesseduffield/lazygit",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "vercel/hyper",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "Netflix/dgs-framework",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "siddharthkp/bundlesize",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "hchiam/learning-lighthouse-ci",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "GoogleChrome/lighthouse-ci",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "flatlogic/react-material-admin",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "microsoft/vscode",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "airbnb/javascript",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "lensapp/lens",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "appditto/natrium_wallet_flutter",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "angular/angular",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "akveo/nebular",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "meteor/meteor",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "influxdata/influxdb",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "denoland/deno",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "nestjs/nest",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "babel/babel",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "grpc/grpc-java",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "robolectric/robolectric",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "remix-run/react-router",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "axios/axios",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "segmentio/evergreen",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "google/filament",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "sourcegraph/sourcegraph",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "Canop/broot",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "mobxjs/mobx",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "facebook/create-react-app",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "microsoft/terminal",
+      "version": "v3.4.6"
+    },
+    {
+      "name": "Linuxbrew/brew",
       "version": "v3.4.6"
     }
   ]
