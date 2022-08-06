@@ -15,8 +15,12 @@ export class ApplicationKeysManager {
     return '';
   }
 
+  /**
+   * While Running This Project on Local Env You Need to Set isLocalEnv to True
+   * Else Set it to False to Read from The Container Json in Docker Container
+   */
   static getFilePath(): string {
-    const isLocalEnv = process.env.IS_LOCAL_DEV;
+    const isLocalEnv = false;
     if (!isLocalEnv) {
       return '/src/';
     } else {
