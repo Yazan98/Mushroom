@@ -67,6 +67,9 @@ The Following Steps is Required to Configure The Project
 7. After Push You Will see The Bot is Online and Waiting for a Command or When Cron Job Callback Called
 
 
+Note:
+> If you want an App Similar to This Application With Slack App Configuration Check [Zilon](https://github.com/Yazan98/Zilon)
+
 ## License
 
 Copyright (C) 2022 Mushroom is An Open Source Project (Licensed under the Apache License, Version 2.0)
