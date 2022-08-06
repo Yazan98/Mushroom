@@ -1,5 +1,8 @@
 {
-  "libraries": [
-
-  ]
+    "libraries": [
+        {
+            "name": "Yazan98/Vanite",
+            "version": "1.0.0"
+        }
+    ]
 }

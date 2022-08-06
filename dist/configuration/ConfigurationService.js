@@ -27,6 +27,7 @@ const GithubRepositoriesTagsManager_1 = require("../managers/GithubRepositoriesT
 const schedule_1 = require("@nestjs/schedule");
 const ChannelEvent_1 = require("../models/ChannelEvent");
 const ApplicationKeysManager_1 = require("../utils/ApplicationKeysManager");
+const CacheFileManager_1 = require("../managers/CacheFileManager");
 let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
     constructor(httpService) {
         this.httpService = httpService;
@@ -87,6 +88,10 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
                 ApplicationUtils_1.ApplicationUtils.printAppLog('Ignoring bot message : Github Limit Exceed!');
                 return;
             }
+            if (message.content.includes('Add Library')) {
+                this.onAddLibraryGeneralPath(message);
+                return;
+            }
             if (this.channels == null) {
                 this.getChannelsInformation();
             }
@@ -107,6 +112,15 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
             ApplicationUtils_1.ApplicationUtils.printAppLog(ex);
         });
         ApplicationUtils_1.ApplicationUtils.printAppLog('Discord Client Started !!');
+    }
+    onAddLibraryGeneralPath(message) {
+        const libraryName = message.content.replace('Add Library ', '');
+        if (libraryName) {
+            const cacheFileSystem = new CacheFileManager_1.CacheFileManager(ConfigurationService_1.GENERAL_JSON_FILE);
+            cacheFileSystem.onPrepareCacheFileLibraries();
+            cacheFileSystem.updateJsonValue(libraryName, '1.0.0');
+            message.reply('Mushroom Added New Library Successfully !! : (' + libraryName + ')');
+        }
     }
     getChannelsInformation() {
         const fs = require('fs');

@@ -22,6 +22,7 @@ export declare class ConfigurationService implements ConfigurationServiceImpleme
     getDiscordClient(): Client;
     executeClientsListeners(): void;
     executeDiscordListener(): void;
+    onAddLibraryGeneralPath(message: Message): void;
     getChannelsInformation(): void;
     getChannelNameById(id: string): string;
     onEventExecute(event: EventCommand, message: Message): void;

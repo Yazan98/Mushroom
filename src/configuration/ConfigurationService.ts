@@ -15,6 +15,7 @@ import { GithubRepositoriesTagsManager } from '../managers/GithubRepositoriesTag
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ChannelEvent } from '../models/ChannelEvent';
 import { ApplicationKeysManager } from '../utils/ApplicationKeysManager';
+import { CacheFileManager } from '../managers/CacheFileManager';
 
 @Injectable()
 export class ConfigurationService
@@ -122,6 +123,11 @@ export class ConfigurationService
         return;
       }
 
+      if (message.content.includes('Add Library')) {
+        this.onAddLibraryGeneralPath(message);
+        return;
+      }
+
       if (this.channels == null) {
         this.getChannelsInformation();
       }
@@ -151,6 +157,21 @@ export class ConfigurationService
       });
 
     ApplicationUtils.printAppLog('Discord Client Started !!');
+  }
+
+  onAddLibraryGeneralPath(message: Message) {
+    const libraryName = message.content.replace('Add Library ', '');
+    if (libraryName) {
+      const cacheFileSystem = new CacheFileManager(
+        ConfigurationService.GENERAL_JSON_FILE,
+      );
+
+      cacheFileSystem.onPrepareCacheFileLibraries();
+      cacheFileSystem.updateJsonValue(libraryName, '1.0.0');
+      message.reply(
+        'Mushroom Added New Library Successfully !! : (' + libraryName + ')',
+      );
+    }
   }
 
   getChannelsInformation() {
