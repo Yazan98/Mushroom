@@ -92,6 +92,11 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
                 this.onAddLibraryGeneralPath(message);
                 return;
             }
+            if (message.content.includes('Invalid Command Triggered') ||
+                message.content.includes('Failed to Get User Information')) {
+                ApplicationUtils_1.ApplicationUtils.printAppLog('Wrong Commands');
+                return;
+            }
             if (this.channels == null) {
                 this.getChannelsInformation();
             }
@@ -179,16 +184,22 @@ let ConfigurationService = ConfigurationService_1 = class ConfigurationService {
         }
     }
     onSendDiscordConnectedMessage() {
-        let targetSenderChannel = '';
-        if (this.channels != null) {
-            for (let i = 0; i < this.channels.length; i++) {
-                if (this.channels[i].name === 'General') {
-                    targetSenderChannel = this.channels[i].id;
+        try {
+            let targetSenderChannel = '';
+            if (this.channels != null) {
+                for (let i = 0; i < this.channels.length; i++) {
+                    if (this.channels[i].name === 'General') {
+                        targetSenderChannel = this.channels[i].id;
+                    }
                 }
             }
+            ApplicationUtils_1.ApplicationUtils.printAppLog('Welcome Channel Id : ' + targetSenderChannel);
+            if (this.discordClient != null) {
+                this.discordClient.channels.cache.get(targetSenderChannel).send('Hi, Mushroom Bot Connected and Started !!');
+            }
         }
-        if (this.discordClient != null) {
-            this.discordClient.channels.cache.get(targetSenderChannel).send('Hi, Mushroom Bot Connected and Started !!');
+        catch (ex) {
+            ApplicationUtils_1.ApplicationUtils.printAppLog('Error Sending Connected Message : ' + ex.message);
         }
     }
     onSendDiscordMessageEventTrigger(message, type) {

@@ -21,7 +21,7 @@ export class ApplicationKeysManager {
    */
   static getFilePath(): string {
     const isLocalEnv = false;
-    if (!isLocalEnv) {
+    if (isLocalEnv) {
       return '/src/';
     } else {
       return '/app/src/';

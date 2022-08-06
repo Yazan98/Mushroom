@@ -16,6 +16,7 @@ class ApplicationUtils {
         response += '\t 4. get libraries android \n';
         response += '\t 5. get libraries backend \n';
         response += '\t 6. get libraries github \n';
+        response += '\t 7. Add Library Username/LibraryName \n';
         return response;
     }
 }

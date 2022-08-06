@@ -15,8 +15,8 @@ class ApplicationKeysManager {
         return '';
     }
     static getFilePath() {
-        const isLocalEnv = process.env.IS_LOCAL_DEV;
-        if (!isLocalEnv) {
+        const isLocalEnv = false;
+        if (isLocalEnv) {
             return '/src/';
         }
         else {
