@@ -32,6 +32,14 @@ While Im Tracking Specific Repositories i need to go to each Repository and Chec
 5. Typescript
 6. Docker Image Configuration
 
+## Supported Features
+1. Get Github Account Information
+2. Get Repository Information
+3. Get Account Repositories
+4. Get Github Repository Tags
+5. Discord Bot Configuration
+6. Cron Job To Run Everyday to Track Libraries
+
 ## Setup
 
 Before You Start Make Sure to Add All Libraries to json Files to let Mushroom Track All of them in Libraries Folder You Will See More Than Json File add The Required Libraries in these Json Files
