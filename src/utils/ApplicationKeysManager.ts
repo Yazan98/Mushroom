@@ -1,6 +1,6 @@
 export class ApplicationKeysManager {
   static getDiscordToken(): string {
-    return 'MTAwMTgwMzA4NDk1NzIyMDk3NQ.GlPZZv.dPsZJ8D8446tiHFA-U__nmPIYTUUtkbbv7Oc98';
+    return '';
   }
 
   static getSupportedPlatforms(): string {

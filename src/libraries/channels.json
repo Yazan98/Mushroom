@@ -1,31 +1,31 @@
 {
   "channels": [
     {
-      "id": "1001968761823318066",
+      "id": "",
       "name": "Local Testing"
     },
     {
-      "id": "1001968157956788325",
+      "id": "",
       "name": "Github Libraries"
     },
     {
-      "id": "1001968096615071845",
+      "id": "",
       "name": "Android Libraries"
     },
     {
-      "id": "1001967946559672330",
+      "id": "",
       "name": "Backend Libraries"
     },
     {
-      "id": "1001967842163433592",
+      "id": "",
       "name": "Info"
     },
     {
-      "id": "1001967745665093692",
+      "id": "",
       "name": "Github"
     },
     {
-      "id": "1001967012160995370",
+      "id": "",
       "name": "General"
     }
   ]
